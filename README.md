@@ -30,7 +30,7 @@ fixed in advance ([full results](eval/RESULTS.md)):
 | Passages where tone and fortune disagree | **90 %** right (first wording: 68 %) | 18 % | ≥ 75 % ✅ |
 | Controls, where they agree | 100 % | 80 % | both ≥ 85 % ❌ (VADER) |
 | Synthetic stories with planned arcs | ρ = 0.94, 12/12 shapes | ρ = 0.70, 7/12 | ρ ≥ 0.8, ≥ 10/12 ✅ |
-| *Romeo and Juliet* with every name changed | pending a new reading (first wording: r = 0.89) | – | r ≥ 0.9 |
+| *Romeo and Juliet* with every name changed | r = 0.89 passage by passage, 0.99 smoothed | – | r ≥ 0.9 ❌ (narrowly) |
 
 What that says:
 
@@ -42,8 +42,8 @@ What that says:
   passages, then the 90 test passages were read once: 90 % right, and 93 % on gloomy words with
   good news.
 - Kev follows planned story arcs almost perfectly, and reads fortune far better than a word list.
-- Renaming the characters moved single passages but not the shape (smoothed curves correlated at
-  0.98 with the first wording); the books still have to be read again with the new one.
+- Renaming the characters moves single passages but not the shape: the smoothed curves correlate
+  at 0.99, and the famous names do not make the reading more tragic.
 - In the first look above, *The Metamorphosis* rises at the end because once Gregor is dead the
   model reads the family's relief as his fortune. The band shows how torn the model is on each
   passage; it will become the uncertainty of the curve.

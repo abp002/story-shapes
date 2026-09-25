@@ -1,13 +1,13 @@
 # Does the model read fortune, or only tone?
 
-Model: Kev pointer head on Qwen/Qwen3.5-4B-Base, serving jaredpalmer/kev-4b at temperature 2.41. Baseline: VADER compound score. The criteria were fixed before the run (ALE-198).
+Model: unknown. Baseline: VADER compound score. The criteria were fixed before the run (ALE-198).
 
 | | Criterion | Result | |
 |---|---|---|---|
 | C1 | Kev reads the direction of fortune right on ≥ 75 % of tone traps | 90 % | ✅ |
 | C2 | Kev and VADER are both right on ≥ 85 % of controls | 80 % (the lower of the two) | ❌ |
 | C3 | Median Spearman ρ ≥ 0.8 on synthetic stories, and the right shape for ≥ 10 of 12 | ρ = 0.94, 12/12 shapes | ✅ |
-| C4 | Renamed Romeo and Juliet correlates r ≥ 0.9 with the original, passage by passage | pending: the books have not been read again with the current questions | ⏳ |
+| C4 | Renamed Romeo and Juliet correlates r ≥ 0.9 with the original, passage by passage | r = 0.89 | ❌ |
 
 ## Tone traps
 
@@ -46,11 +46,9 @@ Median Spearman ρ with the planned levels: Kev 0.94, VADER 0.70. Closest shape 
 
 ## Renamed characters
 
-*Not yet redone with the current questions: christmas-carol, metamorphosis, romeo-and-juliet, romeo-and-juliet-renamed still hold readings made with the first wording, so the numbers below and in the smoothing section are from that wording.*
-
 *Romeo and Juliet* with every character and place renamed (Romeo → Tomas, Juliet → Clara, Verona → Tarsa…), read again and compared passage by passage: Pearson r = 0.89 over 124 passages.
 
-Post hoc, not part of the criterion: the smoothed curves correlate r = 0.98, and the renamed reading is 0.14 lower on average (on a -1 to 1 scale). The famous names do not make the reading more tragic.
+Post hoc, not part of the criterion: the smoothed curves correlate r = 0.99, and the renamed reading is 0.08 lower on average (on a -1 to 1 scale). The famous names do not make the reading more tragic.
 
 ## Smoothing
 
@@ -59,7 +57,7 @@ Width of the Gaussian kernel chosen by leave-one-out cross-validation: each pass
 | Book | Passages | Best σ (passages) | Share of the book |
 |---|---|---|---|
 | christmas-carol | 136 | 1 | 0.7 % |
-| metamorphosis | 111 | 16 | 14.4 % |
+| metamorphosis | 111 | 1 | 0.9 % |
 | romeo-and-juliet | 124 | 1 | 0.8 % |
 
 ## Caveats
