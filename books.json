@@ -25,5 +25,30 @@
     "protagonist": "Romeo and Juliet",
     "start": "Two households, both alike in dignity",
     "expected_shape": "icarus"
+  },
+  {
+    "id": "romeo-and-juliet-renamed",
+    "gutenberg": 1513,
+    "title": "Romeo and Juliet, renamed",
+    "author": "William Shakespeare",
+    "protagonist": "Tomas and Clara",
+    "start": "Two households, both alike in dignity",
+    "expected_shape": "icarus",
+    "rename": {
+      "Romeo": "Tomas",
+      "Juliet": "Clara",
+      "Montague": "Vidal",
+      "Capulet": "Serrano",
+      "Mercutio": "Marco",
+      "Tybalt": "Tobias",
+      "Benvolio": "Bruno",
+      "Lawrence": "Anselm",
+      "Paris": "Aldo",
+      "Verona": "Tarsa",
+      "Mantua": "Ostra",
+      "Escalus": "Ermes",
+      "Rosaline": "Livia",
+      "Balthasar": "Baltran"
+    }
   }
 ]

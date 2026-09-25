@@ -1,0 +1,41 @@
+{
+  "story_sha256": "97d45d2864eca36704ca8f0da41adbf2349a63eff94b126dad8a5b6c689f2f37",
+  "chunking": null,
+  "questions": {
+    "fortune": {
+      "type": "score",
+      "instructions": "At this point in the story, how are things going for {protagonist}?",
+      "criteria": [
+        "Very badly: ruin, grief, terror or despair",
+        "Badly",
+        "Neither well nor badly",
+        "Well",
+        "Very well: joy, love, triumph or relief"
+      ]
+    },
+    "tension": {
+      "type": "score",
+      "instructions": "How tense or suspenseful is this passage?",
+      "criteria": [
+        "Calm",
+        "Some unease",
+        "Tense",
+        "Extreme danger or climax"
+      ]
+    },
+    "present": {
+      "type": "noul",
+      "instructions": "Does {protagonist} appear or act in this passage?"
+    }
+  },
+  "model": {
+    "name": "kev-latest",
+    "run": "jaredpalmer/kev-4b",
+    "base": "Qwen/Qwen3.5-4B-Base",
+    "lora": 16,
+    "backend": "mlx",
+    "dtype": "bfloat16",
+    "temperature": 2.406050072164233,
+    "release_date": "2026-09-24"
+  }
+}

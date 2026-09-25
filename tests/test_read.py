@@ -17,9 +17,11 @@ class FakeClient:
     def __init__(self, run="fake/kev"):
         self.calls = 0
         self.run = run
+        self.states = []
 
     def decide(self, state, questions):
         self.calls += 1
+        self.states.append(state)
         return {
             "answers": {
                 "fortune": {"type": "score", "score": 2.0, "probabilities": {"0": 0, "1": 0, "2": 1, "3": 0, "4": 0}},
@@ -94,3 +96,11 @@ def test_fresh_starts_over_after_a_change(dirs):
     client = FakeClient()
     read({**BOOK, "protagonist": "Luis"}, client, raw, readings, fresh=True)
     assert client.calls == len(records(readings / "tale.jsonl"))
+
+
+def test_a_renamed_book_never_shows_the_original_names_to_the_model(dirs):
+    raw, readings = dirs
+    client = FakeClient()
+    read({**BOOK, "rename": {"word7": "swapped7", "Once": "Twice"}}, client, raw, readings)
+    passages = " ".join(state["passage"] for state in client.states)
+    assert "word7" not in passages and "swapped7" in passages

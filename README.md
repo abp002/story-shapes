@@ -22,17 +22,28 @@ Gaussian-smoothed average.*
 
 ## Status
 
-Early. The first run is encouraging, but three books prove little on their own.
+Early, and measured. Before building anything else, the method was tested against criteria
+fixed in advance ([full results](eval/RESULTS.md)):
 
-- *Romeo and Juliet* and *A Christmas Carol* come out with the shapes you would expect.
-- *The Metamorphosis* is nearly flat, and its last passages rise: once Gregor is dead, the model
-  reads the family's relief as his fortune.
-- Not shown yet: that the model reads fortune better than word lists do, that it reads famous
-  books rather than remembering them, and that the smoothing is not what makes the shapes. Next
-  come a lexicon baseline, passages where tone and fortune disagree, synthetic stories with
-  known arcs, and renamed characters.
-- The band shows how torn the model is on each passage, widened by Kev's calibration
-  temperature. It will become the uncertainty of the curve.
+| Test | Kev-4B | VADER (word list) | Criterion |
+|---|---|---|---|
+| Passages where tone and fortune disagree | 68 % right | 18 % | ≥ 75 % ❌ |
+| Controls, where they agree | 100 % | 80 % | both ≥ 85 % ❌ (VADER) |
+| Synthetic stories with planned arcs | ρ = 0.96, 12/12 shapes | ρ = 0.70, 7/12 | ρ ≥ 0.8, ≥ 10/12 ✅ |
+| *Romeo and Juliet* with every name changed | r = 0.89 with the original | – | r ≥ 0.9 ❌ |
+
+What that says:
+
+- Kev follows planned story arcs almost perfectly, and it reads fortune far better than a word
+  list does.
+- It is still pulled by atmosphere: when gloomy words surround good news it is right only 60 % of
+  the time, and when asked about tone instead it does little better than chance. Tone and
+  fortune are not yet cleanly separated, so that comes first.
+- Renaming the characters moves single passages but not the shape (smoothed curves correlate
+  at 0.98), and the famous names do not make the reading more tragic.
+- In the first look above, *The Metamorphosis* rises at the end because once Gregor is dead the
+  model reads the family's relief as his fortune. The band shows how torn the model is on each
+  passage; it will become the uncertainty of the curve.
 
 ## How it works
 
@@ -57,6 +68,14 @@ git clone https://github.com/jaredpalmer/kev.git ../kev
 # in another terminal
 uv run story-shapes read romeo-and-juliet
 uv run story-shapes plot romeo-and-juliet
+```
+
+The evaluation lives in `eval/`: synthetic stories and tone traps written for the test, the
+model's cached answers, and the report.
+
+```bash
+uv run story-shapes eval run                   # ask the model (answers are cached)
+uv run --group eval story-shapes eval report   # scores, figures and eval/RESULTS.md
 ```
 
 `STORY_SHAPES_API` and `STORY_SHAPES_KEY` point the client at another System One endpoint. On an

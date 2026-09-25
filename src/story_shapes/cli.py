@@ -1,4 +1,4 @@
-"""story-shapes read <book>... | story-shapes plot <book>..."""
+"""story-shapes read <book>... | plot <book>... | eval run|report"""
 
 import argparse
 import hashlib
@@ -7,7 +7,7 @@ import sys
 import time
 from pathlib import Path
 
-from story_shapes import chunk, gutenberg, kev
+from story_shapes import chunk, gutenberg, kev, transform
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw"
@@ -46,6 +46,27 @@ def _same_reading(a: dict, b: dict) -> bool:
     return same_model and all(a.get(key) == b.get(key) for key in ("story_sha256", "chunking", "questions"))
 
 
+def resume(path: Path, meta: dict, key: str, fresh: bool = False) -> set:
+    """Keys already answered in the cache at `path`, after checking it was made with `meta`.
+
+    The meta is written to `<path stem>.meta.json`. A cache made with other settings raises
+    ReadingMismatch instead of mixing answers; `fresh` discards it first.
+    """
+    meta_path = path.with_name(path.stem + ".meta.json")
+    if fresh:
+        path.unlink(missing_ok=True)
+        meta_path.unlink(missing_ok=True)
+    done = set()
+    if path.exists():
+        stored = json.loads(meta_path.read_text()) if meta_path.exists() else {}
+        if not _same_reading(stored, meta):
+            raise ReadingMismatch(f"{path} was made with other settings; rerun with --fresh to start over")
+        done = {json.loads(line)[key] for line in path.read_text().splitlines() if line.strip()}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+    return done
+
+
 def read(book: dict, client, raw_dir: Path = RAW_DIR, readings_dir: Path = READINGS_DIR, fresh: bool = False) -> Path:
     """Ask the model about every passage of `book`; a rerun resumes after the last cached passage.
 
@@ -56,23 +77,14 @@ def read(book: dict, client, raw_dir: Path = RAW_DIR, readings_dir: Path = READI
     if gutenberg.is_copyrighted(raw):
         print(f"{book['id']}: Gutenberg marks this edition as copyrighted; do not publish its text", flush=True)
     story = gutenberg.story_text(raw, book["start"])
+    if "rename" in book:
+        story = transform.rename(story, book["rename"])
     passages = chunk.passages(story)
     questions = kev.questions(book["protagonist"])
     meta = reading_meta(story, questions, client.model_card())
 
-    readings_dir.mkdir(parents=True, exist_ok=True)
     path = readings_dir / f"{book['id']}.jsonl"
-    meta_path = readings_dir / f"{book['id']}.meta.json"
-    if fresh:
-        path.unlink(missing_ok=True)
-        meta_path.unlink(missing_ok=True)
-    done = set()
-    if path.exists():
-        stored = json.loads(meta_path.read_text()) if meta_path.exists() else {}
-        if not _same_reading(stored, meta):
-            raise ReadingMismatch(f"{path} was read with other settings; rerun with --fresh to start over")
-        done = {json.loads(line)["index"] for line in path.read_text().splitlines() if line.strip()}
-    meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+    done = resume(path, meta, "index", fresh)
 
     started = time.perf_counter()
     with path.open("a") as out:
@@ -105,7 +117,24 @@ def main(argv: list[str] | None = None) -> int:
     plot_cmd = commands.add_parser("plot", help="draw the curves of books already read")
     plot_cmd.add_argument("books", nargs="+")
     plot_cmd.add_argument("--out", type=Path, default=ROOT / "data" / "plots" / "shapes.png")
+    eval_cmd = commands.add_parser("eval", help="does the model read fortune or only tone? (ALE-198)")
+    eval_cmd.add_argument("action", choices=["run", "report"])
+    eval_cmd.add_argument("--fresh", action="store_true", help="discard cached answers and start over")
     args = parser.parse_args(argv)
+
+    if args.command == "eval":
+        from story_shapes import evaluate
+
+        client = kev.SystemOne()
+        try:
+            if args.action == "run":
+                evaluate.run(client, fresh=args.fresh)
+            else:
+                card = client.model_card() or {}
+                print(evaluate.write(evaluate.report(), card.get("description", "unknown")))
+        except ReadingMismatch as error:
+            parser.exit(1, f"story-shapes: {error}\n")
+        return 0
 
     books = load_books()
     ids = list(books) if args.books == ["all"] else args.books

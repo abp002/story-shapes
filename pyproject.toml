@@ -17,6 +17,9 @@ story-shapes = "story_shapes.cli:main"
 
 [dependency-groups]
 dev = ["pytest>=8"]
+eval = [
+    "vadersentiment>=3.3.2",
+]
 
 [build-system]
 requires = ["hatchling"]

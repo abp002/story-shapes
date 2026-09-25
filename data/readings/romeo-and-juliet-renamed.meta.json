@@ -1,0 +1,45 @@
+{
+  "story_sha256": "97e9d18a1de2d2202e80753c37593e333426da2e5d64d0b7cd19c562b04d4d39",
+  "chunking": {
+    "target_words": 200,
+    "max_words": 260,
+    "min_words": 40
+  },
+  "questions": {
+    "fortune": {
+      "type": "score",
+      "instructions": "At this point in the story, how are things going for Tomas and Clara?",
+      "criteria": [
+        "Very badly: ruin, grief, terror or despair",
+        "Badly",
+        "Neither well nor badly",
+        "Well",
+        "Very well: joy, love, triumph or relief"
+      ]
+    },
+    "tension": {
+      "type": "score",
+      "instructions": "How tense or suspenseful is this passage?",
+      "criteria": [
+        "Calm",
+        "Some unease",
+        "Tense",
+        "Extreme danger or climax"
+      ]
+    },
+    "present": {
+      "type": "noul",
+      "instructions": "Does Tomas and Clara appear or act in this passage?"
+    }
+  },
+  "model": {
+    "name": "kev-latest",
+    "run": "jaredpalmer/kev-4b",
+    "base": "Qwen/Qwen3.5-4B-Base",
+    "lora": 16,
+    "backend": "mlx",
+    "dtype": "bfloat16",
+    "temperature": 2.406050072164233,
+    "release_date": "2026-09-24"
+  }
+}
