@@ -1,0 +1,57 @@
+{
+  "story_sha256": "c717152ae4f5719a0b97e0bdf2ef026426e620b621aafe6cda51778e17798bb8",
+  "chunking": null,
+  "questions": {
+    "v0-feelings/fortune": {
+      "type": "score",
+      "instructions": "At this point in the story, how are things going for {protagonist}?",
+      "criteria": [
+        "Very badly: ruin, grief, terror or despair",
+        "Badly",
+        "Neither well nor badly",
+        "Well",
+        "Very well: joy, love, triumph or relief"
+      ]
+    },
+    "v1-outcomes/fortune": {
+      "type": "score",
+      "instructions": "At this point in the story, how are things going for {protagonist}?",
+      "criteria": [
+        "Disaster: they lose what matters most to them, or face ruin or death",
+        "Setback: something goes wrong for them",
+        "No real change in their situation",
+        "Gain: something goes right for them",
+        "Triumph: they get what they most wanted, or are saved"
+      ]
+    },
+    "v2-outcomes-not-mood/fortune": {
+      "type": "score",
+      "instructions": "Judge only what is happening to {protagonist}, not the mood of the scene, the weather or the setting. At this point in the story, how are things going for {protagonist}?",
+      "criteria": [
+        "Disaster: they lose what matters most to them, or face ruin or death",
+        "Setback: something goes wrong for them",
+        "No real change in their situation",
+        "Gain: something goes right for them",
+        "Triumph: they get what they most wanted, or are saved"
+      ]
+    },
+    "v3-events/good": {
+      "type": "noul",
+      "instructions": "In this passage, does something good happen to {protagonist}, or does {protagonist} learn of something good?"
+    },
+    "v3-events/bad": {
+      "type": "noul",
+      "instructions": "In this passage, does something bad happen to {protagonist}, or does {protagonist} learn of something bad?"
+    }
+  },
+  "model": {
+    "name": "kev-latest",
+    "run": "jaredpalmer/kev-4b",
+    "base": "Qwen/Qwen3.5-4B-Base",
+    "lora": 16,
+    "backend": "mlx",
+    "dtype": "bfloat16",
+    "temperature": 2.406050072164233,
+    "release_date": "2026-09-24"
+  }
+}

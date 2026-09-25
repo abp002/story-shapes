@@ -6,11 +6,11 @@
       "type": "score",
       "instructions": "At this point in the story, how are things going for {protagonist}?",
       "criteria": [
-        "Very badly: ruin, grief, terror or despair",
-        "Badly",
-        "Neither well nor badly",
-        "Well",
-        "Very well: joy, love, triumph or relief"
+        "Disaster: they lose what matters most to them, or face ruin or death",
+        "Setback: something goes wrong for them",
+        "No real change in their situation",
+        "Gain: something goes right for them",
+        "Triumph: they get what they most wanted, or are saved"
       ]
     },
     "tension": {

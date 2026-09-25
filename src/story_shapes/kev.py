@@ -4,12 +4,14 @@ import os
 
 import httpx
 
+# Levels described as outcomes, not feelings: worded with emotions ("grief", "joy") they pulled the
+# model towards the tone of the passage (ALE-199: 65 % → 90 % on tone traps in development).
 FORTUNE_LEVELS = [
-    "Very badly: ruin, grief, terror or despair",
-    "Badly",
-    "Neither well nor badly",
-    "Well",
-    "Very well: joy, love, triumph or relief",
+    "Disaster: they lose what matters most to them, or face ruin or death",
+    "Setback: something goes wrong for them",
+    "No real change in their situation",
+    "Gain: something goes right for them",
+    "Triumph: they get what they most wanted, or are saved",
 ]
 TENSION_LEVELS = ["Calm", "Some unease", "Tense", "Extreme danger or climax"]
 

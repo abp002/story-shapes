@@ -34,11 +34,87 @@ CRITERIA = {
 }
 
 
-def load_traps() -> list[dict]:
+def load_traps(folder: str = "traps") -> list[dict]:
+    """Tone traps and controls: `traps` is the test set, read once per question; `dev` is for tuning."""
     items = []
-    for path in sorted((EVAL_DIR / "traps").glob("*.jsonl")):
+    for path in sorted((EVAL_DIR / folder).glob("*.jsonl")):
         items += [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
     return items
+
+
+# The first wording (ALE-178/198), kept so the development results stay reproducible.
+FEELING_LEVELS = [
+    "Very badly: ruin, grief, terror or despair",
+    "Badly",
+    "Neither well nor badly",
+    "Well",
+    "Very well: joy, love, triumph or relief",
+]
+OUTCOME_LEVELS = kev.FORTUNE_LEVELS
+
+
+def _fortune(instructions: str, levels: list[str]) -> dict:
+    return {"fortune": {"type": "score", "instructions": instructions, "criteria": levels}}
+
+
+# Wordings of the fortune question tried on the development set. Questions are isolated in Kev
+# (they cannot read each other), so asking fortune alone gives the same answer as asking it
+# alongside tension and presence.
+VARIANTS = {
+    "v0-feelings": lambda p: _fortune(f"At this point in the story, how are things going for {p}?", FEELING_LEVELS),
+    "v1-outcomes": lambda p: _fortune(f"At this point in the story, how are things going for {p}?", OUTCOME_LEVELS),
+    "v2-outcomes-not-mood": lambda p: _fortune(
+        f"Judge only what is happening to {p}, not the mood of the scene, the weather or the setting. "
+        f"At this point in the story, how are things going for {p}?",
+        OUTCOME_LEVELS,
+    ),
+    "v3-events": lambda p: {
+        "good": {"type": "noul", "instructions": f"In this passage, does something good happen to {p}, or does {p} learn of something good?"},
+        "bad": {"type": "noul", "instructions": f"In this passage, does something bad happen to {p}, or does {p} learn of something bad?"},
+    },
+}
+
+
+def fortune_of(answers: dict) -> float:
+    """Signed fortune from any variant: the score on a -1..1 scale, or P(good) - P(bad) for v3."""
+    if "fortune" in answers:
+        return signed(answers, "fortune")
+    return answers["good"]["noul"] - answers["bad"]["noul"]
+
+
+def all_variants(protagonist: str) -> dict:
+    """Every variant's questions in one request, ids prefixed with the variant.
+
+    Kev reads the passage once and answers each question on its own, so this gives the same
+    answers as one request per variant at a fraction of the cost.
+    """
+    return {
+        f"{name}/{question_id}": question
+        for name, questions_for in VARIANTS.items()
+        for question_id, question in questions_for(protagonist).items()
+    }
+
+
+def of_variant(answers: dict, name: str) -> dict:
+    return {key.split("/", 1)[1]: value for key, value in answers.items() if key.startswith(f"{name}/")}
+
+
+def tune(client, fresh: bool = False) -> dict:
+    """Try every wording on the development set; the test set is not touched."""
+    dev = load_traps("dev")
+    answers = ask(dev, client, RESULTS_DIR / "dev.jsonl", all_variants, fresh)
+    results = {}
+    for name in VARIANTS:
+        row = {}
+        for label, kinds in [(kind, (kind,)) for kind in TRAP_KINDS + CONTROL_KINDS] + [("traps", TRAP_KINDS)]:
+            items = [item for item in dev if item["kind"] in kinds]
+            row[label] = metrics.direction_accuracy(
+                [fortune_of(of_variant(answers[item["id"]], name)) for item in items],
+                [curve.to_unit(item["fortune"], 5) for item in items],
+            )
+        results[name] = row
+    (RESULTS_DIR / "dev.json").write_text(json.dumps(results, indent=2) + "\n")
+    return results
 
 
 def load_synthetic() -> tuple[list[dict], dict[str, list[int]]]:
@@ -66,13 +142,17 @@ def _questions(protagonist: str, with_tone: bool) -> dict:
     return questions
 
 
-def ask(items: list[dict], client, path: Path, with_tone: bool, fresh: bool = False) -> dict[str, dict]:
-    """The model's answers for each item (`id`, `protagonist`, `passage`), cached in `path`."""
+def ask(items: list[dict], client, path: Path, questions_for, fresh: bool = False) -> dict[str, dict]:
+    """The model's answers for each item (`id`, `protagonist`, `passage`), cached in `path`.
+
+    `questions_for(protagonist)` builds the questions; its template, filled with a placeholder,
+    is part of the cache check.
+    """
     card = client.model_card()
     meta = {
         "story_sha256": hashlib.sha256(json.dumps(items, sort_keys=True).encode()).hexdigest(),
         "chunking": None,
-        "questions": _questions("{protagonist}", with_tone),
+        "questions": questions_for("{protagonist}"),
         "model": {key: card[key] for key in MODEL_FIELDS if key in card} if card else None,
     }
     done = resume(path, meta, "id", fresh)
@@ -80,9 +160,7 @@ def ask(items: list[dict], client, path: Path, with_tone: bool, fresh: bool = Fa
         for n, item in enumerate(items, 1):
             if item["id"] in done:
                 continue
-            response = client.decide(
-                kev.state(item["protagonist"], item["passage"]), _questions(item["protagonist"], with_tone)
-            )
+            response = client.decide(kev.state(item["protagonist"], item["passage"]), questions_for(item["protagonist"]))
             out.write(json.dumps({"id": item["id"], "answers": response["answers"]}, ensure_ascii=False) + "\n")
             out.flush()
             print(f"{path.stem} {n}/{len(items)}", flush=True)
@@ -94,9 +172,9 @@ def cached(path: Path) -> dict[str, dict]:
 
 
 def run(client, fresh: bool = False) -> None:
-    ask(load_traps(), client, RESULTS_DIR / "traps.jsonl", with_tone=True, fresh=fresh)
+    ask(load_traps(), client, RESULTS_DIR / "traps.jsonl", lambda p: _questions(p, with_tone=True), fresh=fresh)
     stories, _ = load_synthetic()
-    ask(synthetic_items(stories), client, RESULTS_DIR / "synthetic.jsonl", with_tone=False, fresh=fresh)
+    ask(synthetic_items(stories), client, RESULTS_DIR / "synthetic.jsonl", lambda p: _questions(p, with_tone=False), fresh=fresh)
 
 
 def signed(answers: dict, question: str) -> float:
@@ -110,6 +188,12 @@ def vader(texts: list[str]) -> list[float]:
 
     analyzer = SentimentIntensityAnalyzer()
     return [analyzer.polarity_scores(text)["compound"] for text in texts]
+
+
+def stale_reading(book_id: str, protagonist: str) -> bool:
+    """Whether a book was read with questions other than the current ones."""
+    meta = json.loads((READINGS_DIR / f"{book_id}.meta.json").read_text())
+    return meta.get("questions") != kev.questions(protagonist)
 
 
 def _book_fortune(book_id: str) -> tuple[list[float], list[float]]:
@@ -159,6 +243,11 @@ def report() -> dict:
             "levels": story["levels"],
         })
 
+    from story_shapes.cli import load_books
+
+    books = load_books()
+    stale = sorted(b for b in ("christmas-carol", "metamorphosis", "romeo-and-juliet", "romeo-and-juliet-renamed")
+                   if stale_reading(b, books[b]["protagonist"]))
     original, original_present = _book_fortune("romeo-and-juliet")
     renamed, renamed_present = _book_fortune("romeo-and-juliet-renamed")
     sigma = max(1.5, 0.05 * len(original))  # the width plot.draw uses
@@ -184,7 +273,7 @@ def report() -> dict:
             "C2": {"value": c2, "passed": c2 >= 0.85},
             "C3": {"value": statistics.median(kev_rhos), "right_shapes": right_shapes,
                    "passed": statistics.median(kev_rhos) >= 0.8 and right_shapes >= 10},
-            "C4": {"value": c4, "passed": c4 >= 0.9},
+            "C4": {"value": c4, "passed": c4 >= 0.9, "pending": bool({"romeo-and-juliet", "romeo-and-juliet-renamed"} & set(stale))},
         },
         "traps": {"by_kind": by_kind, "kev_on_traps": c1, "vader_on_traps": pooled(TRAP_KINDS, "vader_fortune")},
         "synthetic": {
@@ -201,6 +290,7 @@ def report() -> dict:
             "posthoc_mean_shift": statistics.fmean(renamed) - statistics.fmean(original),
         },
         "bandwidth": bandwidths,
+        "stale_books": stale,
     }
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     (RESULTS_DIR / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n")
@@ -224,7 +314,9 @@ def markdown(summary: dict, model: str) -> str:
         f"| C1 | {CRITERIA['C1']} | {_pct(c['C1']['value'])} | {'✅' if c['C1']['passed'] else '❌'} |",
         f"| C2 | {CRITERIA['C2']} | {_pct(c['C2']['value'])} (the lower of the two) | {'✅' if c['C2']['passed'] else '❌'} |",
         f"| C3 | {CRITERIA['C3']} | ρ = {c['C3']['value']:.2f}, {c['C3']['right_shapes']}/12 shapes | {'✅' if c['C3']['passed'] else '❌'} |",
-        f"| C4 | {CRITERIA['C4']} | r = {c['C4']['value']:.2f} | {'✅' if c['C4']['passed'] else '❌'} |",
+        (f"| C4 | {CRITERIA['C4']} | pending: the books have not been read again with the current questions | ⏳ |"
+         if c["C4"].get("pending") else
+         f"| C4 | {CRITERIA['C4']} | r = {c['C4']['value']:.2f} | {'✅' if c['C4']['passed'] else '❌'} |"),
         "",
         "## Tone traps",
         "",
@@ -264,6 +356,9 @@ def markdown(summary: dict, model: str) -> str:
         "",
         "## Renamed characters",
         "",
+        *([f"*Not yet redone with the current questions: {', '.join(summary['stale_books'])} still hold readings "
+           "made with the first wording, so the numbers below and in the smoothing section are from that wording.*", ""]
+          if summary["stale_books"] else []),
         f"*Romeo and Juliet* with every character and place renamed (Romeo → Tomas, Juliet → Clara, Verona → Tarsa…), "
         f"read again and compared passage by passage: Pearson r = {summary['renamed']['pearson']:.2f} "
         f"over {summary['renamed']['passages']} passages.",

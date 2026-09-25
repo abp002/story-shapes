@@ -14,9 +14,10 @@ BOOK = {"id": "tale", "gutenberg": 999, "protagonist": "Ana", "start": "Once upo
 
 
 class FakeClient:
-    def __init__(self, run="fake/kev"):
+    def __init__(self, run="fake/kev", backend="mlx"):
         self.calls = 0
         self.run = run
+        self.backend = backend
         self.states = []
 
     def decide(self, state, questions):
@@ -32,7 +33,7 @@ class FakeClient:
         }
 
     def model_card(self):
-        return {"run": self.run}
+        return {"run": self.run, "backend": self.backend}
 
 
 @pytest.fixture
@@ -64,7 +65,7 @@ def test_the_settings_of_a_reading_are_stored_beside_it(dirs):
     meta = json.loads((readings / "tale.meta.json").read_text())
     assert meta["chunking"] == {"target_words": 200, "max_words": 260, "min_words": 40}
     assert meta["questions"]["fortune"]["instructions"].endswith("for Ana?")
-    assert meta["model"] == {"run": "fake/kev"}
+    assert meta["model"] == {"run": "fake/kev", "backend": "mlx"}
     assert len(meta["story_sha256"]) == 64
 
 
@@ -104,3 +105,11 @@ def test_a_renamed_book_never_shows_the_original_names_to_the_model(dirs):
     read({**BOOK, "rename": {"word7": "swapped7", "Once": "Twice"}}, client, raw, readings)
     passages = " ".join(state["passage"] for state in client.states)
     assert "word7" not in passages and "swapped7" in passages
+
+
+def test_resuming_on_another_backend_is_refused(dirs):
+    # the same weights on a GPU give probabilities up to ~0.05 away from a Mac: never mix them in one curve
+    raw, readings = dirs
+    read(BOOK, FakeClient(backend="mlx"), raw, readings)
+    with pytest.raises(ReadingMismatch):
+        read(BOOK, FakeClient(backend="cuda"), raw, readings)

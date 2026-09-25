@@ -27,20 +27,23 @@ fixed in advance ([full results](eval/RESULTS.md)):
 
 | Test | Kev-4B | VADER (word list) | Criterion |
 |---|---|---|---|
-| Passages where tone and fortune disagree | 68 % right | 18 % | ≥ 75 % ❌ |
+| Passages where tone and fortune disagree | **90 %** right (first wording: 68 %) | 18 % | ≥ 75 % ✅ |
 | Controls, where they agree | 100 % | 80 % | both ≥ 85 % ❌ (VADER) |
-| Synthetic stories with planned arcs | ρ = 0.96, 12/12 shapes | ρ = 0.70, 7/12 | ρ ≥ 0.8, ≥ 10/12 ✅ |
-| *Romeo and Juliet* with every name changed | r = 0.89 with the original | – | r ≥ 0.9 ❌ |
+| Synthetic stories with planned arcs | ρ = 0.94, 12/12 shapes | ρ = 0.70, 7/12 | ρ ≥ 0.8, ≥ 10/12 ✅ |
+| *Romeo and Juliet* with every name changed | pending a new reading (first wording: r = 0.89) | – | r ≥ 0.9 |
 
 What that says:
 
-- Kev follows planned story arcs almost perfectly, and it reads fortune far better than a word
-  list does.
-- It is still pulled by atmosphere: when gloomy words surround good news it is right only 60 % of
-  the time, and when asked about tone instead it does little better than chance. Tone and
-  fortune are not yet cleanly separated, so that comes first.
-- Renaming the characters moves single passages but not the shape (smoothed curves correlate
-  at 0.98), and the famous names do not make the reading more tragic.
+- The first wording of the question failed: it described the levels with feelings ("grief,
+  terror or despair", "joy, love, triumph or relief"), and the model followed the mood of the
+  words. When gloomy words surrounded good news, it was right only 60 % of the time.
+- Describing the levels as outcomes instead ("they lose what matters most", "they get what they
+  most wanted") fixed it. The wording was chosen on a separate development set of 80 new
+  passages, then the 90 test passages were read once: 90 % right, and 93 % on gloomy words with
+  good news.
+- Kev follows planned story arcs almost perfectly, and reads fortune far better than a word list.
+- Renaming the characters moved single passages but not the shape (smoothed curves correlated at
+  0.98 with the first wording); the books still have to be read again with the new one.
 - In the first look above, *The Metamorphosis* rises at the end because once Gregor is dead the
   model reads the family's relief as his fortune. The band shows how torn the model is on each
   passage; it will become the uncertainty of the curve.
@@ -75,6 +78,7 @@ model's cached answers, and the report.
 
 ```bash
 uv run story-shapes eval run                   # ask the model (answers are cached)
+uv run story-shapes eval tune                  # compare wordings on the development set
 uv run --group eval story-shapes eval report   # scores, figures and eval/RESULTS.md
 ```
 

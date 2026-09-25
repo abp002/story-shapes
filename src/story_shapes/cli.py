@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -13,6 +14,8 @@ ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw"
 READINGS_DIR = ROOT / "data" / "readings"
 MODEL_FIELDS = ("name", "run", "base", "lora", "backend", "dtype", "temperature", "release_date")
+# Answers are only comparable from the same weights on the same kind of hardware and precision.
+MODEL_IDENTITY = ("run", "backend", "dtype")
 
 
 class ReadingMismatch(Exception):
@@ -42,7 +45,8 @@ def reading_meta(story: str, questions: dict, model_card: dict | None) -> dict:
 
 
 def _same_reading(a: dict, b: dict) -> bool:
-    same_model = (a.get("model") or {}).get("run") == (b.get("model") or {}).get("run")
+    model_a, model_b = a.get("model") or {}, b.get("model") or {}
+    same_model = all(model_a.get(key) == model_b.get(key) for key in MODEL_IDENTITY)
     return same_model and all(a.get(key) == b.get(key) for key in ("story_sha256", "chunking", "questions"))
 
 
@@ -108,7 +112,18 @@ def read(book: dict, client, raw_dir: Path = RAW_DIR, readings_dir: Path = READI
     return path
 
 
+def load_env(path: Path) -> None:
+    """KEY=value lines from a local, untracked .env file; the real environment always wins."""
+    if not path.exists():
+        return
+    for line in path.read_text().splitlines():
+        key, sep, value = line.partition("=")
+        if sep and key.strip() and not key.lstrip().startswith("#"):
+            os.environ.setdefault(key.strip(), value.strip())
+
+
 def main(argv: list[str] | None = None) -> int:
+    load_env(ROOT / ".env")
     parser = argparse.ArgumentParser(prog="story-shapes")
     commands = parser.add_subparsers(dest="command", required=True)
     read_cmd = commands.add_parser("read", help="read books with the model and cache the answers")
@@ -118,7 +133,7 @@ def main(argv: list[str] | None = None) -> int:
     plot_cmd.add_argument("books", nargs="+")
     plot_cmd.add_argument("--out", type=Path, default=ROOT / "data" / "plots" / "shapes.png")
     eval_cmd = commands.add_parser("eval", help="does the model read fortune or only tone? (ALE-198)")
-    eval_cmd.add_argument("action", choices=["run", "report"])
+    eval_cmd.add_argument("action", choices=["run", "report", "tune"])
     eval_cmd.add_argument("--fresh", action="store_true", help="discard cached answers and start over")
     args = parser.parse_args(argv)
 
@@ -129,6 +144,9 @@ def main(argv: list[str] | None = None) -> int:
         try:
             if args.action == "run":
                 evaluate.run(client, fresh=args.fresh)
+            elif args.action == "tune":
+                for name, row in evaluate.tune(client, fresh=args.fresh).items():
+                    print(name, "  ".join(f"{kind} {100 * value:.0f}%" for kind, value in row.items()))
             else:
                 card = client.model_card() or {}
                 print(evaluate.write(evaluate.report(), card.get("description", "unknown")))
