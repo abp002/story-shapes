@@ -1,0 +1,29 @@
+[
+  {
+    "id": "christmas-carol",
+    "gutenberg": 46,
+    "title": "A Christmas Carol",
+    "author": "Charles Dickens",
+    "protagonist": "Ebenezer Scrooge",
+    "start": "MARLEY was dead",
+    "expected_shape": "man in a hole"
+  },
+  {
+    "id": "metamorphosis",
+    "gutenberg": 5200,
+    "title": "The Metamorphosis",
+    "author": "Franz Kafka",
+    "protagonist": "Gregor Samsa",
+    "start": "One morning, when Gregor Samsa woke",
+    "expected_shape": "from bad to worse"
+  },
+  {
+    "id": "romeo-and-juliet",
+    "gutenberg": 1513,
+    "title": "Romeo and Juliet",
+    "author": "William Shakespeare",
+    "protagonist": "Romeo and Juliet",
+    "start": "Two households, both alike in dignity",
+    "expected_shape": "icarus"
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "story_sha256": "ccdd7a7a8183d2f563e2728cf9c62c88a3fa403eae562f6ef1be8249b6c060b3",
+  "chunking": {
+    "target_words": 200,
+    "max_words": 260,
+    "min_words": 40
+  },
+  "questions": {
+    "fortune": {
+      "type": "score",
+      "instructions": "At this point in the story, how are things going for Gregor Samsa?",
+      "criteria": [
+        "Very badly: ruin, grief, terror or despair",
+        "Badly",
+        "Neither well nor badly",
+        "Well",
+        "Very well: joy, love, triumph or relief"
+      ]
+    },
+    "tension": {
+      "type": "score",
+      "instructions": "How tense or suspenseful is this passage?",
+      "criteria": [
+        "Calm",
+        "Some unease",
+        "Tense",
+        "Extreme danger or climax"
+      ]
+    },
+    "present": {
+      "type": "noul",
+      "instructions": "Does Gregor Samsa appear or act in this passage?"
+    }
+  },
+  "model": {
+    "name": "kev-latest",
+    "run": "jaredpalmer/kev-4b",
+    "base": "Qwen/Qwen3.5-4B-Base",
+    "lora": 16,
+    "backend": "mlx",
+    "dtype": "bfloat16",
+    "temperature": 2.406050072164233,
+    "release_date": "2026-09-24"
+  }
+}
