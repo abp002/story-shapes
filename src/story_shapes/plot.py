@@ -47,6 +47,20 @@ def series(readings: list[dict], question: str, n_levels: int, signed: bool, wei
     return values, line, half
 
 
+def fortune_curve(readings: list[dict], relative: bool = False):
+    """The death cut (or None) and the fortune series up to it.
+
+    The protagonist's fortune ends where they die for good; the passages after it are about others.
+    Passages without the protagonist count less.
+    """
+    present = np.array([record["answers"]["present"]["noul"] for record in readings])
+    dead = [record["answers"].get("dead", {}).get("noul", 0.0) for record in readings]
+    cut = curve.death_cut(dead)
+    end = len(readings) if cut is None else cut + 1
+    return cut, series(readings[:end], "fortune", len(FORTUNE_LEVELS), signed=True,
+                       weights=0.1 + 0.9 * present[:end], relative=relative)
+
+
 def _panel(ax, x, values, line, band, color, alphas):
     ax.scatter(x, values, s=9, color=color, alpha=alphas, linewidths=0, zorder=2)
     ax.fill_between(x, line - band, line + band, color=color, alpha=0.14, linewidth=0, zorder=1)
@@ -69,13 +83,8 @@ def draw(books: list[dict], readings_dir: Path, out: Path, relative: bool = Fals
         readings = load(readings_dir / f"{book['id']}.jsonl")
         x = np.array([(record["start"] + record["end"]) / 2 for record in readings])
         present = np.array([record["answers"]["present"]["noul"] for record in readings])
-
-        # the protagonist's fortune ends where they die for good; the passages after it are about others
-        dead = [record["answers"].get("dead", {}).get("noul", 0.0) for record in readings]
-        cut = curve.death_cut(dead)
-        end = len(readings) if cut is None else cut + 1
-        fortune = series(readings[:end], "fortune", len(FORTUNE_LEVELS), signed=True, weights=0.1 + 0.9 * present[:end],
-                         relative=relative)
+        cut, fortune = fortune_curve(readings, relative)
+        end = len(fortune[0])
         top = axes[0][column]
         _panel(top, x[:end], *fortune, FORTUNE, alphas=0.15 + 0.5 * present[:end])
         if cut is not None:

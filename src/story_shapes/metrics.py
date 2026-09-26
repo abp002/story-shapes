@@ -59,3 +59,42 @@ def loo_bandwidth(values, sigmas, weights=None) -> tuple[float, dict[float, floa
         predicted = kernel @ y / kernel.sum(axis=1)
         errors[sigma] = float(np.average((y - predicted) ** 2, weights=w))
     return min(errors, key=errors.get), errors
+
+
+def resample(x, y, n: int) -> np.ndarray:
+    """`n` evenly spaced points of the curve (x, y), from its first position to its last."""
+    x, y = np.asarray(x, dtype=float), np.asarray(y, dtype=float)
+    return np.interp(np.linspace(x[0], x[-1], n), x, y)
+
+
+def template_fit(line, half, template) -> tuple[float, float]:
+    """Stretch and shift a template onto a curve; how much of it then lies inside the curve's band.
+
+    Least squares fits `a + b * template` to `line`. Returns b (a template fitted upside down,
+    b ≤ 0, is not the template's shape) and the share of points where the fitted template is
+    within `half` of the line.
+    """
+    line, half, t = (np.asarray(v, dtype=float) for v in (line, half, template))
+    if t.std() == 0:
+        return 0.0, float(np.mean(np.abs(line - line.mean()) <= half))
+    b, a = np.polyfit(t, line, 1)
+    return float(b), float(np.mean(np.abs(a + b * t - line) <= half))
+
+
+def flat_coverage(line, half) -> float:
+    """Share of the curve whose band holds its own average: 1 means a flat line fits it everywhere."""
+    line, half = np.asarray(line, dtype=float), np.asarray(half, dtype=float)
+    return float(np.mean(np.abs(line - line.mean()) <= half))
+
+
+def permutation_p(predicted, expected, rounds: int = 10000, seed: int = 0) -> float:
+    """How often shuffled labels match the predictions at least as well as the real ones.
+
+    Shuffling keeps how many books carry each label, so a method that always answers the most
+    common shape gets no credit for it.
+    """
+    predicted, expected = np.asarray(predicted), np.asarray(expected)
+    observed = np.sum(predicted == expected)
+    rng = np.random.default_rng(seed)
+    at_least = sum(np.sum(predicted == rng.permutation(expected)) >= observed for _ in range(rounds))
+    return float((1 + at_least) / (1 + rounds))

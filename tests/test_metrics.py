@@ -1,7 +1,17 @@
 import numpy as np
 import pytest
 
-from story_shapes.metrics import direction_accuracy, loo_bandwidth, nearest_shape, pearson, spearman
+from story_shapes.metrics import (
+    direction_accuracy,
+    flat_coverage,
+    loo_bandwidth,
+    nearest_shape,
+    pearson,
+    permutation_p,
+    resample,
+    spearman,
+    template_fit,
+)
 
 SHAPES = {
     "rise": [0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4],
@@ -63,3 +73,42 @@ def test_bandwidth_for_a_noisy_wave_is_in_between():
     best, errors = loo_bandwidth(wave, sigmas=[0.5, 2, 6, 60])
     assert best in (2, 6)
     assert set(errors) == {0.5, 2, 6, 60}
+
+
+def test_resample_spans_the_curve_from_its_first_to_its_last_position():
+    assert np.allclose(resample([0.1, 0.5, 0.9], [0.0, 1.0, 0.0], 5), [0, 0.5, 1, 0.5, 0])
+
+
+def test_a_template_stretched_onto_its_own_shape_fits_inside_any_band():
+    t = [0, 1, 2, 3, 4, 4, 2, 1]
+    b, inside = template_fit(0.3 + 0.1 * np.array(t), [0.01] * 8, t)
+    assert b == pytest.approx(0.1) and inside == 1.0
+
+
+def test_the_opposite_shape_fits_upside_down():
+    b, _ = template_fit([4, 3, 2, 1, 0], [0.1] * 5, [0, 1, 2, 3, 4])
+    assert b < 0
+
+
+def test_a_wrong_shape_leaves_the_band():
+    icarus = [1, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0]
+    cinderella = [0, 1, 2, 3, 4, 4, 2, 1, 1, 2, 3, 4]
+    _, inside = template_fit(np.array(icarus) / 4, [0.1] * 12, cinderella)
+    assert inside < 0.5
+
+
+def test_flat_coverage_tells_a_resolvable_shape_from_noise():
+    line = [0.0, 0.5, 1.0, 0.5, 0.0]
+    assert flat_coverage(line, [0.1] * 5) < 0.5
+    assert flat_coverage(line, [0.8] * 5) == 1.0
+
+
+def test_permutation_p_is_small_for_perfect_matches_and_large_for_none():
+    labels = ["a", "b", "c", "d"] * 5
+    assert permutation_p(labels, labels, rounds=2000) < 0.01
+    assert permutation_p(["a"] * 20, ["b"] * 20, rounds=200) == 1.0
+
+
+def test_always_answering_the_common_label_gets_no_credit():
+    expected = ["hole"] * 15 + ["icarus", "rags", "fall", "cinderella", "oedipus"]
+    assert permutation_p(["hole"] * 20, expected, rounds=2000) == 1.0
