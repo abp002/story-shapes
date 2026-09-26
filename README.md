@@ -44,9 +44,12 @@ What that says:
 - Kev follows planned story arcs almost perfectly, and reads fortune far better than a word list.
 - Renaming the characters moves single passages but not the shape: the smoothed curves correlate
   at 0.99, and the famous names do not make the reading more tragic.
-- In the first look above, *The Metamorphosis* rises at the end because once Gregor is dead the
-  model reads the family's relief as his fortune. The band shows how torn the model is on each
-  passage; it will become the uncertainty of the curve.
+- The curve now ends where the protagonist dies for good (a fourth question asks whether they
+  are dead): *The Metamorphosis* stops at Gregor's last breath instead of rising with his family's
+  relief, and Scrooge's vision of his own grave does not end his. Juliet's faked death still
+  fools it, so *Romeo and Juliet* ends too early; that is being worked on.
+- The band shows how torn the model is on each passage; it will become the uncertainty of the
+  curve.
 
 ## How it works
 

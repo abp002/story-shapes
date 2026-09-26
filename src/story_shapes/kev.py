@@ -32,6 +32,13 @@ def questions(protagonist: str) -> dict:
             "type": "noul",
             "instructions": f"Does {protagonist} appear or act in this passage?",
         },
+        "dead": {
+            "type": "noul",
+            "instructions": (
+                f"Is {protagonist} dead at this point in the story? Count only a real death, not a dream, "
+                "a vision, a prophecy, a rumour or a death that is only faked or feared."
+            ),
+        },
     }
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from story_shapes.curve import mean_level, smooth, spread, to_unit
+from story_shapes.curve import death_cut, mean_level, smooth, spread, to_unit
 
 
 def test_mean_level_of_a_certain_answer_is_that_level():
@@ -45,3 +45,26 @@ def test_smooth_pulls_neighbours_towards_a_spike():
     curve = smooth(values, sigma=2)
     assert len(curve) == 21
     assert curve[10] > curve[9] > curve[5] > 0
+
+
+
+def test_a_lasting_death_ends_the_curve_where_it_starts():
+    assert death_cut([0.0] * 10 + [0.9, 0.95, 0.7, 0.8, 0.9]) == 10
+
+
+def test_a_single_passage_of_death_that_does_not_last_is_ignored():
+    # Scrooge sees his own grave, then wakes up
+    assert death_cut([0.0] * 10 + [0.95] + [0.05] * 6) is None
+
+
+def test_a_faked_death_followed_by_a_real_one_cuts_at_the_real_one():
+    dead = [0.0] * 5 + [0.85, 0.3, 0.1, 0.0, 0.0] + [0.0] * 5 + [0.9, 0.95, 0.99]
+    assert death_cut(dead) == 15
+
+
+def test_a_death_in_the_last_passage_counts():
+    assert death_cut([0.0] * 8 + [0.97]) == 8
+
+
+def test_no_death_no_cut():
+    assert death_cut([0.1] * 20) is None

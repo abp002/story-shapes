@@ -30,6 +30,10 @@
     "present": {
       "type": "noul",
       "instructions": "Does Romeo and Juliet appear or act in this passage?"
+    },
+    "dead": {
+      "type": "noul",
+      "instructions": "Is Romeo and Juliet dead at this point in the story? Count only a real death, not a dream, a vision, a prophecy, a rumour or a death that is only faked or feared."
     }
   },
   "model": {

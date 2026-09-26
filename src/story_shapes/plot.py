@@ -51,7 +51,7 @@ def _panel(ax, x, values, line, band, color, alphas):
     for side in ("left", "bottom"):
         ax.spines[side].set_color(GRID)
     ax.tick_params(colors=MUTED, labelsize=8, length=0)
-    ax.set_xlim(0, 1)
+    ax.set_xlim(0, 1)  # the whole story, even when the curve ends earlier
     ax.set_xticks([0, 0.5, 1], ["start", "", "end"])
 
 
@@ -63,9 +63,17 @@ def draw(books: list[dict], readings_dir: Path, out: Path) -> None:
         x = np.array([(record["start"] + record["end"]) / 2 for record in readings])
         present = np.array([record["answers"]["present"]["noul"] for record in readings])
 
-        fortune = series(readings, "fortune", len(FORTUNE_LEVELS), signed=True, weights=0.1 + 0.9 * present)
+        # the protagonist's fortune ends where they die for good; the passages after it are about others
+        dead = [record["answers"].get("dead", {}).get("noul", 0.0) for record in readings]
+        cut = curve.death_cut(dead)
+        end = len(readings) if cut is None else cut + 1
+        fortune = series(readings[:end], "fortune", len(FORTUNE_LEVELS), signed=True, weights=0.1 + 0.9 * present[:end])
         top = axes[0][column]
-        _panel(top, x, *fortune, FORTUNE, alphas=0.15 + 0.5 * present)
+        _panel(top, x[:end], *fortune, FORTUNE, alphas=0.15 + 0.5 * present[:end])
+        if cut is not None:
+            top.plot(x[cut], fortune[1][-1], marker="x", markersize=8, markeredgewidth=2, color=INK, zorder=4)
+            top.annotate("dies", (x[cut], fortune[1][-1]), xytext=(-4, 10), textcoords="offset points",
+                         ha="right", color=MUTED, fontsize=8)
         top.axhline(0, color=GRID, linewidth=1, zorder=0)
         top.set_ylim(-1.05, 1.05)
         top.set_yticks([-1, 0, 1], ["ill fortune", "", "good fortune"])

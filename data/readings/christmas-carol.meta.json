@@ -30,6 +30,10 @@
     "present": {
       "type": "noul",
       "instructions": "Does Ebenezer Scrooge appear or act in this passage?"
+    },
+    "dead": {
+      "type": "noul",
+      "instructions": "Is Ebenezer Scrooge dead at this point in the story? Count only a real death, not a dream, a vision, a prophecy, a rumour or a death that is only faked or feared."
     }
   },
   "model": {

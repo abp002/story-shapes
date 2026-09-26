@@ -39,3 +39,18 @@ def smooth(values, weights=None, sigma: float = 4.0) -> np.ndarray:
     if weights is not None:
         kernel = kernel * np.asarray(weights, dtype=float)[None, :]
     return kernel @ y / kernel.sum(axis=1)
+
+
+def death_cut(dead, threshold: float = 0.8, hold: float = 0.5, window: int = 5) -> int | None:
+    """The passage where the protagonist dies for good, or None.
+
+    A passage counts when P(dead) reaches `threshold` and the average over it and the next
+    `window - 1` passages stays at `hold` or more: a vision of one's own grave, or a death that is
+    faked and then undone a few passages later, does not end the curve.
+    """
+    dead = [float(p) for p in dead]
+    for i, p in enumerate(dead):
+        ahead = dead[i : i + window]
+        if p >= threshold and sum(ahead) / len(ahead) >= hold:
+            return i
+    return None
