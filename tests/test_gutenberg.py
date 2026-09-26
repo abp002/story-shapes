@@ -37,3 +37,13 @@ def test_an_edition_gutenberg_marks_as_copyrighted_is_detected():
 
 def test_a_public_domain_edition_is_not_flagged():
     assert not is_copyrighted(RAW)
+
+
+def test_an_end_marker_cuts_off_what_follows_the_story():
+    raw = "CONTENTS\nTHE AWAKENING\nBEYOND THE BAYOU\n\nTHE AWAKENING\nA parrot.\nShe swam.\n\nBEYOND THE BAYOU\nAnother story."
+    assert story_text(raw, "A parrot", "BEYOND THE BAYOU") == "A parrot.\nShe swam."
+
+
+def test_an_end_marker_only_found_before_the_start_is_an_error():
+    with pytest.raises(ValueError):
+        story_text("THE END\nIt began.", "It began", "THE END")

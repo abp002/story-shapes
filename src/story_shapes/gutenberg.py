@@ -30,14 +30,20 @@ def fetch(gutenberg_id: int, cache_dir: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def story_text(raw: str, start: str) -> str:
-    """The story from its first line up to Gutenberg's end marker.
+def story_text(raw: str, start: str, end: str | None = None) -> str:
+    """The story from its first line up to `end`, or to Gutenberg's end marker.
 
     `start` is the story's opening words; it skips the title page, preface and table of contents,
-    which would otherwise be read as the first passages.
+    which would otherwise be read as the first passages. `end`, looked for after the start, cuts
+    off what a volume carries after the story (more stories, the next play).
     """
     begin = raw.find(start)
     if begin == -1:
         raise ValueError(f"start marker not found: {start!r}")
-    end = _END.search(raw, begin)
-    return raw[begin : end.start() if end else len(raw)].strip()
+    if end is not None:
+        stop = raw.find(end, begin + len(start))
+        if stop == -1:
+            raise ValueError(f"end marker not found after the start: {end!r}")
+        return raw[begin:stop].strip()
+    marker = _END.search(raw, begin)
+    return raw[begin : marker.start() if marker else len(raw)].strip()

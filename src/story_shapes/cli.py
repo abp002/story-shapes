@@ -80,7 +80,7 @@ def read(book: dict, client, raw_dir: Path = RAW_DIR, readings_dir: Path = READI
     raw = gutenberg.fetch(book["gutenberg"], raw_dir)
     if gutenberg.is_copyrighted(raw):
         print(f"{book['id']}: Gutenberg marks this edition as copyrighted; do not publish its text", flush=True)
-    story = gutenberg.story_text(raw, book["start"])
+    story = gutenberg.story_text(raw, book["start"], book.get("end"))
     if "rename" in book:
         story = transform.rename(story, book["rename"])
     passages = chunk.passages(story)

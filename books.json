@@ -6,7 +6,8 @@
     "author": "Charles Dickens",
     "protagonist": "Ebenezer Scrooge",
     "start": "MARLEY was dead",
-    "expected_shape": "man in a hole"
+    "expected_shape": "man in a hole",
+    "why": "A miser falls into visions of his lonely death, then wakes up redeemed."
   },
   {
     "id": "metamorphosis",
@@ -15,7 +16,8 @@
     "author": "Franz Kafka",
     "protagonist": "Gregor Samsa",
     "start": "One morning, when Gregor Samsa woke",
-    "expected_shape": "from bad to worse"
+    "expected_shape": "from bad to worse",
+    "why": "Gregor wakes up as an insect and loses his job, his family's love and his life."
   },
   {
     "id": "romeo-and-juliet",
@@ -24,7 +26,8 @@
     "author": "William Shakespeare",
     "protagonist": "Romeo and Juliet",
     "start": "Two households, both alike in dignity",
-    "expected_shape": "icarus"
+    "expected_shape": "icarus",
+    "why": "Love and a secret wedding, then banishment and death."
   },
   {
     "id": "romeo-and-juliet-renamed",
@@ -49,6 +52,272 @@
       "Escalus": "Ermes",
       "Rosaline": "Livia",
       "Balthasar": "Baltran"
-    }
+    },
+    "why": "Love and a secret wedding, then banishment and death."
+  },
+  {
+    "id": "hamlet",
+    "gutenberg": 1524,
+    "title": "Hamlet",
+    "author": "William Shakespeare",
+    "protagonist": "Hamlet",
+    "start": "Who’s there?",
+    "expected_shape": "ambiguous",
+    "why": "Vonnegut's own example of a story whose ups and downs cannot be told apart."
+  },
+  {
+    "id": "macbeth",
+    "gutenberg": 1533,
+    "title": "Macbeth",
+    "author": "William Shakespeare",
+    "protagonist": "Macbeth",
+    "start": "When shall we three meet again?",
+    "expected_shape": "icarus",
+    "why": "Rises to the throne by murder, then loses everything and is killed."
+  },
+  {
+    "id": "king-lear",
+    "gutenberg": 1532,
+    "title": "King Lear",
+    "author": "William Shakespeare",
+    "protagonist": "King Lear",
+    "start": "I thought the King had more affected",
+    "expected_shape": "riches to rags",
+    "why": "Gives his kingdom away and is cast out by the daughters who got it; dies over Cordelia."
+  },
+  {
+    "id": "oedipus-the-king",
+    "gutenberg": 31,
+    "title": "Oedipus the King",
+    "author": "Sophocles, tr. F. Storr",
+    "protagonist": "Oedipus",
+    "start": "Suppliants of all ages are seated",
+    "end": "FOOTNOTES",
+    "expected_shape": "riches to rags",
+    "why": "The play opens with him on the throne and ends with him blind and banished. The myth is the oedipus arc; the play is only its last fall."
+  },
+  {
+    "id": "dorian-gray",
+    "gutenberg": 174,
+    "title": "The Picture of Dorian Gray",
+    "author": "Oscar Wilde",
+    "protagonist": "Dorian Gray",
+    "start": "The studio was filled with the rich odour of roses",
+    "expected_shape": "icarus",
+    "why": "Gets his wish of lasting youth and a charmed life, then decays and dies."
+  },
+  {
+    "id": "ethan-frome",
+    "gutenberg": 4517,
+    "title": "Ethan Frome",
+    "author": "Edith Wharton",
+    "protagonist": "Ethan Frome",
+    "start": "The village lay under two feet of snow",
+    "expected_shape": "from bad to worse",
+    "why": "A poor, trapped farmer glimpses happiness with Mattie; the sledding crash leaves him worse off for good."
+  },
+  {
+    "id": "the-awakening",
+    "gutenberg": 160,
+    "title": "The Awakening",
+    "author": "Kate Chopin",
+    "protagonist": "Edna Pontellier",
+    "start": "A green and yellow parrot, which hung in a cage",
+    "end": "BEYOND THE BAYOU",
+    "expected_shape": "icarus",
+    "why": "Wakes up to a freer life, then finds no place for it and drowns."
+  },
+  {
+    "id": "daisy-miller",
+    "gutenberg": 208,
+    "title": "Daisy Miller",
+    "author": "Henry James",
+    "protagonist": "Daisy Miller",
+    "start": "At the little town of Vevey, in Switzerland",
+    "expected_shape": "riches to rags",
+    "why": "A carefree young woman is shunned by society and dies of fever in Rome."
+  },
+  {
+    "id": "madame-bovary",
+    "gutenberg": 2413,
+    "title": "Madame Bovary",
+    "author": "Gustave Flaubert, tr. Eleanor Marx-Aveling",
+    "protagonist": "Emma Bovary",
+    "start": "We were in class when the head-master came in",
+    "expected_shape": "riches to rags",
+    "why": "Brief highs (the ball, the affairs) on a way down to debt and suicide."
+  },
+  {
+    "id": "frankenstein",
+    "gutenberg": 84,
+    "title": "Frankenstein",
+    "author": "Mary Shelley",
+    "protagonist": "Victor Frankenstein",
+    "start": "You will rejoice to hear that no disaster",
+    "expected_shape": "riches to rags",
+    "why": "A happy, gifted youth; after the creature, loss after loss until his death."
+  },
+  {
+    "id": "jane-eyre",
+    "gutenberg": 1260,
+    "title": "Jane Eyre",
+    "author": "Charlotte Brontë",
+    "protagonist": "Jane Eyre",
+    "start": "There was no possibility of taking a walk that day",
+    "expected_shape": "cinderella",
+    "why": "A mistreated orphan finds love at Thornfield, loses it at the altar, and ends inheriting and married."
+  },
+  {
+    "id": "a-little-princess",
+    "gutenberg": 146,
+    "title": "A Little Princess",
+    "author": "Frances Hodgson Burnett",
+    "protagonist": "Sara Crewe",
+    "start": "Once on a dark winter's day, when the yellow fog",
+    "end": "End of Project Gutenberg's",
+    "expected_shape": "man in a hole",
+    "why": "A rich pupil is made a servant when her father dies, then is found and restored."
+  },
+  {
+    "id": "secret-garden",
+    "gutenberg": 113,
+    "title": "The Secret Garden",
+    "author": "Frances Hodgson Burnett",
+    "protagonist": "Mary Lennox",
+    "start": "When Mary Lennox was sent to Misselthwaite Manor",
+    "expected_shape": "rags to riches",
+    "why": "A lonely, sour orphan grows healthy and loved through the garden."
+  },
+  {
+    "id": "anne-of-green-gables",
+    "gutenberg": 45,
+    "title": "Anne of Green Gables",
+    "author": "L. M. Montgomery",
+    "protagonist": "Anne Shirley",
+    "start": "MRS. Rachel Lynde lived just where the Avonlea main road",
+    "expected_shape": "rags to riches",
+    "why": "An unwanted orphan finds a home and success; Matthew's death is a late dip."
+  },
+  {
+    "id": "wizard-of-oz",
+    "gutenberg": 55,
+    "title": "The Wonderful Wizard of Oz",
+    "author": "L. Frank Baum",
+    "protagonist": "Dorothy",
+    "start": "Dorothy lived in the midst of the great Kansas prairies",
+    "expected_shape": "man in a hole",
+    "why": "Swept away from home by a cyclone, she wins her way back."
+  },
+  {
+    "id": "treasure-island",
+    "gutenberg": 120,
+    "title": "Treasure Island",
+    "author": "Robert Louis Stevenson",
+    "protagonist": "Jim Hawkins",
+    "start": "Squire Trelawney, Dr. Livesey, and the rest of these gentlemen",
+    "expected_shape": "man in a hole",
+    "why": "A boy sails into mutiny and danger and comes home rich."
+  },
+  {
+    "id": "robinson-crusoe",
+    "gutenberg": 521,
+    "title": "Robinson Crusoe",
+    "author": "Daniel Defoe",
+    "protagonist": "Robinson Crusoe",
+    "start": "I was born in the year 1632, in the city of York",
+    "expected_shape": "man in a hole",
+    "why": "Shipwrecked alone for decades, then rescued and wealthy."
+  },
+  {
+    "id": "pride-and-prejudice",
+    "gutenberg": 1342,
+    "title": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "protagonist": "Elizabeth Bennet",
+    "start": "It is a truth universally acknowledged",
+    "end": "CHISWICK PRESS",
+    "expected_shape": "man in a hole",
+    "why": "Misjudgements and Lydia's elopement bring her family low before both are set right."
+  },
+  {
+    "id": "great-expectations",
+    "gutenberg": 1400,
+    "title": "Great Expectations",
+    "author": "Charles Dickens",
+    "protagonist": "Pip",
+    "start": "My father’s family name being Pirrip",
+    "expected_shape": "cinderella",
+    "why": "A poor boy rises on a secret fortune, loses it and falls ill, then recovers modestly."
+  },
+  {
+    "id": "oliver-twist",
+    "gutenberg": 730,
+    "title": "Oliver Twist",
+    "author": "Charles Dickens",
+    "protagonist": "Oliver Twist",
+    "start": "Among other public buildings in a certain town",
+    "expected_shape": "rags to riches",
+    "why": "A workhouse orphan, pulled back into Fagin's gang, ends adopted and safe."
+  },
+  {
+    "id": "tess",
+    "gutenberg": 110,
+    "title": "Tess of the d'Urbervilles",
+    "author": "Thomas Hardy",
+    "protagonist": "Tess Durbeyfield",
+    "start": "On an evening in the latter part of May a middle-aged man",
+    "expected_shape": "oedipus",
+    "why": "Ruined by Alec, happy at Talbothays with Angel, then rejected, trapped and hanged."
+  },
+  {
+    "id": "great-gatsby",
+    "gutenberg": 64317,
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "protagonist": "Jay Gatsby",
+    "start": "In my younger and more vulnerable years",
+    "expected_shape": "icarus",
+    "why": "Wins Daisy back, then loses her and is shot."
+  },
+  {
+    "id": "silas-marner",
+    "gutenberg": 550,
+    "title": "Silas Marner",
+    "author": "George Eliot",
+    "protagonist": "Silas Marner",
+    "start": "In the days when the spinning-wheels hummed busily",
+    "expected_shape": "man in a hole",
+    "why": "Betrayed, exiled and robbed, then remade by the child who wanders in."
+  },
+  {
+    "id": "call-of-the-wild",
+    "gutenberg": 215,
+    "title": "The Call of the Wild",
+    "author": "Jack London",
+    "protagonist": "Buck",
+    "start": "Buck did not read the newspapers, or he would have known",
+    "expected_shape": "man in a hole",
+    "why": "A pampered dog is stolen into brutal sled work and ends free as a wolf leader."
+  },
+  {
+    "id": "candide",
+    "gutenberg": 19942,
+    "title": "Candide",
+    "author": "Voltaire",
+    "protagonist": "Candide",
+    "start": "In a castle of Westphalia, belonging to the Baron",
+    "end": "FOOTNOTES:",
+    "expected_shape": "ambiguous",
+    "why": "Disaster after disaster with brief reprieves; a control for a story with no single shape."
+  },
+  {
+    "id": "black-beauty",
+    "gutenberg": 271,
+    "title": "Black Beauty",
+    "author": "Anna Sewell",
+    "protagonist": "Black Beauty",
+    "start": "The first place that I can well remember",
+    "expected_shape": "man in a hole",
+    "why": "A well-loved horse sinks through ever harsher owners, then is rescued."
   }
 ]
