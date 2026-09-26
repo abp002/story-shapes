@@ -10,7 +10,9 @@ Nivel: activo
 Bitácora: ALE
 
 ## How it works
-- `books.json` lists the books: Gutenberg id, protagonist, and the line where the story starts.
+- `books.json` lists the books: Gutenberg id, protagonist, the words the story starts with, an optional
+  `end` marker (footnotes, the next play), and the `expected_shape` with `why`. Shapes were committed
+  before the book was read (ALE-224); never edit them after seeing a curve.
 - `story-shapes read <book>` downloads the text, cuts it into passages and asks Kev three questions
   per passage (`fortune` and `tension` as scores, `present` as a yes/no). Raw answers are cached in
   `data/readings/<book>.jsonl`, one passage per line, and a rerun resumes where it stopped.
@@ -36,5 +38,6 @@ Bitácora: ALE
 
 ## Commands
 - `uv run pytest` — unit tests (chunking, curve maths, story slicing).
+- `uv run story-shapes eval corpus` — score every read book against its expected shape (`eval/CORPUS.md`).
 - `uv run story-shapes read christmas-carol`
 - `uv run story-shapes plot christmas-carol metamorphosis romeo-and-juliet [--relative]`
