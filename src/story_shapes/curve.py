@@ -41,16 +41,25 @@ def smooth(values, weights=None, sigma: float = 4.0) -> np.ndarray:
     return kernel @ y / kernel.sum(axis=1)
 
 
-def death_cut(dead, threshold: float = 0.8, hold: float = 0.5, window: int = 5) -> int | None:
+def death_cut(
+    dead, threshold: float = 0.8, hold: float = 0.5, window: int = 5, present=None, revoke: bool = False
+) -> int | None:
     """The passage where the protagonist dies for good, or None.
 
     A passage counts when P(dead) reaches `threshold` and the average over it and the next
     `window - 1` passages stays at `hold` or more: a vision of one's own grave, or a death that is
-    faked and then undone a few passages later, does not end the curve.
+    faked and then undone a few passages later, does not end the curve. With `revoke`, a death is
+    also dropped when, within that window, the protagonist appears (`present` ≥ 0.5) and is
+    clearly alive (P(dead) ≤ 0.2); mere absence, as after a real death, does not revoke it.
     """
     dead = [float(p) for p in dead]
     for i, p in enumerate(dead):
         ahead = dead[i : i + window]
-        if p >= threshold and sum(ahead) / len(ahead) >= hold:
-            return i
+        if p < threshold or sum(ahead) / len(ahead) < hold:
+            continue
+        if revoke and present is not None and any(
+            present[j] >= 0.5 and dead[j] <= 0.2 for j in range(i + 1, min(i + window, len(dead)))
+        ):
+            continue
+        return i
     return None

@@ -68,3 +68,17 @@ def test_a_death_in_the_last_passage_counts():
 
 def test_no_death_no_cut():
     assert death_cut([0.1] * 20) is None
+
+
+def test_a_death_undone_by_the_protagonist_acting_alive_is_revoked():
+    dead = [0.0] * 3 + [0.9, 0.9, 0.85] + [0.05, 0.0, 0.0, 0.0]
+    present = [1.0] * 3 + [0.9, 0.9, 0.9] + [0.95, 0.9, 0.9, 0.9]
+    assert death_cut(dead, present=present, revoke=True) is None
+    assert death_cut(dead, present=present, revoke=False) == 3
+
+
+def test_a_death_followed_by_absence_is_not_revoked():
+    # Gregor after his death: not "dead" in each passage, but not acting alive either
+    dead = [0.0] * 3 + [0.9, 0.8, 0.85, 0.9] + [0.05, 0.05, 0.4]
+    present = [1.0] * 3 + [0.9, 0.6, 0.6, 0.5] + [0.1, 0.2, 0.3]
+    assert death_cut(dead, present=present, revoke=True) == 3

@@ -133,7 +133,7 @@ def main(argv: list[str] | None = None) -> int:
     plot_cmd.add_argument("books", nargs="+")
     plot_cmd.add_argument("--out", type=Path, default=ROOT / "data" / "plots" / "shapes.png")
     eval_cmd = commands.add_parser("eval", help="does the model read fortune or only tone? (ALE-198)")
-    eval_cmd.add_argument("action", choices=["run", "report", "tune"])
+    eval_cmd.add_argument("action", choices=["run", "report", "tune", "deaths"])
     eval_cmd.add_argument("--fresh", action="store_true", help="discard cached answers and start over")
     args = parser.parse_args(argv)
 
@@ -144,6 +144,9 @@ def main(argv: list[str] | None = None) -> int:
         try:
             if args.action == "run":
                 evaluate.run(client, fresh=args.fresh)
+            elif args.action == "deaths":
+                for rule in evaluate.tune_deaths(client, fresh=args.fresh)[:8]:
+                    print(rule)
             elif args.action == "tune":
                 for name, row in evaluate.tune(client, fresh=args.fresh).items():
                     print(name, "  ".join(f"{kind} {100 * value:.0f}%" for kind, value in row.items()))

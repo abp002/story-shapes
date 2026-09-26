@@ -1,0 +1,24 @@
+{
+  "story_sha256": "a0dfd9f49ef7ce29ea05f8925ec4ab8c42429431e680e99292cf54e42a7a2373",
+  "chunking": null,
+  "questions": {
+    "dead": {
+      "type": "noul",
+      "instructions": "Is {protagonist} dead at this point in the story? Count only a real death, not a dream, a vision, a prophecy, a rumour or a death that is only faked or feared."
+    },
+    "present": {
+      "type": "noul",
+      "instructions": "Does {protagonist} appear or act in this passage?"
+    }
+  },
+  "model": {
+    "name": "kev-latest",
+    "run": "jaredpalmer/kev-4b",
+    "base": "Qwen/Qwen3.5-4B-Base",
+    "lora": 16,
+    "backend": "mlx",
+    "dtype": "bfloat16",
+    "temperature": 2.406050072164233,
+    "release_date": "2026-09-24"
+  }
+}

@@ -46,8 +46,11 @@ What that says:
   at 0.99, and the famous names do not make the reading more tragic.
 - The curve now ends where the protagonist dies for good (a fourth question asks whether they
   are dead): *The Metamorphosis* stops at Gregor's last breath instead of rising with his family's
-  relief, and Scrooge's vision of his own grave does not end his. Juliet's faked death still
-  fools it, so *Romeo and Juliet* ends too early; that is being worked on.
+  relief, and Scrooge's vision of his own grave does not end his. Known limitation: a faked
+  death fools it. Juliet is mourned as dead for five passages, so *Romeo and Juliet* ends at her
+  false death instead of the tomb. Rules tuned on 16 development stories (real, faked and dreamt
+  deaths, `eval deaths`) did no better on the books: asked one passage at a time, "is the
+  protagonist dead?" cannot tell a believed death from a real one.
 - The band shows how torn the model is on each passage; it will become the uncertainty of the
   curve.
 

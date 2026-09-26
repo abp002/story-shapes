@@ -36,3 +36,10 @@ def test_book_readings_made_with_other_questions_are_reported_as_stale(tmp_path,
     assert evaluate.stale_reading("tale", "Ana")
     (tmp_path / "tale.meta.json").write_text(json.dumps({"questions": kev.questions("Ana")}))
     assert not evaluate.stale_reading("tale", "Ana")
+
+
+def test_a_death_cut_is_right_within_one_passage_and_no_death_means_no_cut():
+    from story_shapes.evaluate import death_right
+
+    assert death_right(5, 5) and death_right(6, 5) and not death_right(7, 5)
+    assert death_right(None, None) and not death_right(3, None) and not death_right(None, 5)

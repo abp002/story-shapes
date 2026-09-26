@@ -117,6 +117,53 @@ def tune(client, fresh: bool = False) -> dict:
     return results
 
 
+def load_deaths() -> list[dict]:
+    """Development stories with a known passage of death (or none): real, faked, visions, pairs."""
+    stories = []
+    for path in sorted((EVAL_DIR / "deaths").glob("*.json")):
+        stories += json.loads(path.read_text())["stories"]
+    return stories
+
+
+def death_questions(protagonist: str) -> dict:
+    questions = kev.questions(protagonist)
+    return {key: questions[key] for key in ("dead", "present")}
+
+
+DEATH_RULES = [
+    {"threshold": t, "hold": h, "window": w, "revoke": r}
+    for t in (0.7, 0.8, 0.9) for h in (0.4, 0.5, 0.6) for w in (3, 5, 8) for r in (False, True)
+]
+
+
+def death_right(cut: int | None, truth: int | None) -> bool:
+    """A cut is right within one passage of the real death; no death means no cut."""
+    return cut is None if truth is None else cut is not None and abs(cut - truth) <= 1
+
+
+def tune_deaths(client, fresh: bool = False) -> list[dict]:
+    """Score every death rule on the development stories, best first. The books are not touched."""
+    stories = load_deaths()
+    items = [
+        {"id": f"{story['id']}-{i}", "protagonist": story["protagonist"], "passage": passage}
+        for story in stories for i, passage in enumerate(story["passages"])
+    ]
+    answers = ask(items, client, RESULTS_DIR / "deaths-dev.jsonl", death_questions, fresh)
+    scored = []
+    for rule in DEATH_RULES:
+        right = 0
+        for story in stories:
+            n = len(story["passages"])
+            dead = [answers[f"{story['id']}-{i}"]["dead"]["noul"] for i in range(n)]
+            present = [answers[f"{story['id']}-{i}"]["present"]["noul"] for i in range(n)]
+            truth = next((i for i, d in enumerate(story["dead"]) if d), None)
+            right += death_right(curve.death_cut(dead, present=present, **rule), truth)
+        scored.append({**rule, "right": right, "of": len(stories)})
+    scored.sort(key=lambda r: -r["right"])
+    (RESULTS_DIR / "deaths-dev.json").write_text(json.dumps(scored, indent=2) + "\n")
+    return scored
+
+
 def load_synthetic() -> tuple[list[dict], dict[str, list[int]]]:
     """Synthetic stories, and the fortune template of each shape."""
     stories, shapes = [], {}
