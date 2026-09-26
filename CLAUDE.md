@@ -19,7 +19,10 @@ Bitácora: ALE
   holds the text hash, chunking, questions and model, and `read` refuses to resume on a mismatch.
   Changing the chunking or the questions means rerunning with `--fresh`.
 - `story-shapes plot <book>...` turns the readings into curves: the expected level of each score,
-  smoothed over neighbouring passages, with the spread of the probabilities as the band.
+  smoothed over neighbouring passages. The band is a 95 % interval of the smoothed curve
+  (`curve.confidence`: kernel-weighted variance of Kev's doubt plus passage disagreement, over the
+  effective passage count, corrected for lag-1 autocorrelation). `--relative` puts each curve on
+  its own book's scale (`curve.relative`).
 
 ## Kev
 - A clone of jaredpalmer/kev sits next to this repo (`../kev`), served locally (MLX on Apple Silicon):
@@ -34,4 +37,4 @@ Bitácora: ALE
 ## Commands
 - `uv run pytest` — unit tests (chunking, curve maths, story slicing).
 - `uv run story-shapes read christmas-carol`
-- `uv run story-shapes plot christmas-carol metamorphosis romeo-and-juliet`
+- `uv run story-shapes plot christmas-carol metamorphosis romeo-and-juliet [--relative]`

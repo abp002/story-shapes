@@ -34,11 +34,61 @@ def smooth(values, weights=None, sigma: float = 4.0) -> np.ndarray:
     protagonist does not appear; a passage with weight 0 does not pull the curve at all.
     """
     y = np.asarray(values, dtype=float)
-    positions = np.arange(len(y))
+    kernel = _kernel(len(y), weights, sigma)
+    return kernel @ y / kernel.sum(axis=1)
+
+
+def _kernel(n: int, weights, sigma: float) -> np.ndarray:
+    positions = np.arange(n)
     kernel = np.exp(-0.5 * ((positions[:, None] - positions[None, :]) / sigma) ** 2)
     if weights is not None:
         kernel = kernel * np.asarray(weights, dtype=float)[None, :]
-    return kernel @ y / kernel.sum(axis=1)
+    return kernel
+
+
+def lag1_autocorrelation(residuals) -> float:
+    """Correlation between each residual and the next one, floored at 0."""
+    r = np.asarray(residuals, dtype=float)
+    if len(r) < 3 or r[:-1].std() == 0 or r[1:].std() == 0:
+        return 0.0
+    return max(0.0, float(np.corrcoef(r[:-1], r[1:])[0, 1]))
+
+
+def confidence(values, spreads, weights=None, sigma: float = 4.0, z: float = 1.96) -> tuple[np.ndarray, np.ndarray]:
+    """The smoothed curve and the half-width of an interval around it: how far it could be off.
+
+    At each position the variance of what the kernel sees combines how torn the model is inside
+    each passage (`spreads`) with how much the passages disagree with the curve, and is divided by
+    the number of passages that effectively count, (Σw)² / Σw². That number shrinks at the ends of
+    the story, before a cut, and where passages carry little weight, so the band widens there.
+    Neighbouring passages are not independent (a gloomy chapter stays gloomy), so the effective
+    count is further scaled by (1 - ρ) / (1 + ρ), with ρ the lag-1 autocorrelation of the residuals.
+    """
+    y = np.asarray(values, dtype=float)
+    s = np.asarray(spreads, dtype=float)
+    kernel = _kernel(len(y), weights, sigma)
+    total = kernel.sum(axis=1)
+    line = kernel @ y / total
+    variance = (kernel * (s[None, :] ** 2 + (y[None, :] - line[:, None]) ** 2)).sum(axis=1) / total
+    counted = np.ones(len(y), bool) if weights is None else np.asarray(weights, dtype=float) > 0
+    rho = lag1_autocorrelation((y - line)[counted])
+    n_eff = total**2 / (kernel**2).sum(axis=1) * (1 - rho) / (1 + rho)
+    return line, z * np.sqrt(variance / n_eff)
+
+
+def relative(line, values, half) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Put a curve on its own book's scale: 0 is the book's average, ±1 one standard deviation of the curve.
+
+    A story that stays bad from start to finish looks flat on the absolute scale; here its ups and
+    downs inside the bad fill the height. The per-passage `values` move with the line; the band's
+    `half` width is only scaled. A band that is wide on this scale means the shape is mostly noise
+    blown up.
+    """
+    line = np.asarray(line, dtype=float)
+    centre, scale = line.mean(), line.std()
+    if scale == 0:
+        scale = 1.0
+    return (line - centre) / scale, (np.asarray(values, dtype=float) - centre) / scale, np.asarray(half, dtype=float) / scale
 
 
 def death_cut(

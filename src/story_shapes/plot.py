@@ -18,6 +18,7 @@ MUTED = "#52514e"
 GRID = "#e4e3df"
 FORTUNE = "#2a78d6"
 TENSION = "#eb6834"
+RELATIVE_LIMIT = 3.2  # standard deviations shown in the relative view
 
 
 def load(path: Path) -> list[dict]:
@@ -25,10 +26,12 @@ def load(path: Path) -> list[dict]:
     return sorted(records, key=lambda record: record["index"])
 
 
-def series(readings: list[dict], question: str, n_levels: int, signed: bool, weights=None, sigma_frac=0.05):
-    """Per-passage values, the smoothed curve and the smoothed spread, all on the plotting scale.
+def series(readings: list[dict], question: str, n_levels: int, signed: bool, weights=None, sigma_frac=0.05,
+           relative=False):
+    """Per-passage values, the smoothed curve and the half-width of its 95 % band, on the plotting scale.
 
-    Signed scales run from -1 (lowest level) to +1; unsigned ones from 0 to 1.
+    Signed scales run from -1 (lowest level) to +1; unsigned ones from 0 to 1. With `relative`, all
+    three are moved onto the book's own scale (see `curve.relative`).
     """
     probabilities = [record["answers"][question]["probabilities"] for record in readings]
     levels = np.array([curve.mean_level(p) for p in probabilities])
@@ -38,7 +41,10 @@ def series(readings: list[dict], question: str, n_levels: int, signed: bool, wei
     else:
         values, spreads = levels / (n_levels - 1), spreads / (n_levels - 1)
     sigma = max(1.5, sigma_frac * len(readings))
-    return values, curve.smooth(values, weights, sigma), curve.smooth(spreads, weights, sigma)
+    line, half = curve.confidence(values, spreads, weights, sigma)
+    if relative:
+        line, values, half = curve.relative(line, values, half)
+    return values, line, half
 
 
 def _panel(ax, x, values, line, band, color, alphas):
@@ -55,7 +61,8 @@ def _panel(ax, x, values, line, band, color, alphas):
     ax.set_xticks([0, 0.5, 1], ["start", "", "end"])
 
 
-def draw(books: list[dict], readings_dir: Path, out: Path) -> None:
+def draw(books: list[dict], readings_dir: Path, out: Path, relative: bool = False) -> None:
+    """One column per book. With `relative`, each curve is drawn on its own book's scale."""
     fig, axes = plt.subplots(2, len(books), figsize=(4.4 * len(books), 5.4), sharex=True, squeeze=False)
     fig.patch.set_facecolor(SURFACE)
     for column, book in enumerate(books):
@@ -67,7 +74,8 @@ def draw(books: list[dict], readings_dir: Path, out: Path) -> None:
         dead = [record["answers"].get("dead", {}).get("noul", 0.0) for record in readings]
         cut = curve.death_cut(dead)
         end = len(readings) if cut is None else cut + 1
-        fortune = series(readings[:end], "fortune", len(FORTUNE_LEVELS), signed=True, weights=0.1 + 0.9 * present[:end])
+        fortune = series(readings[:end], "fortune", len(FORTUNE_LEVELS), signed=True, weights=0.1 + 0.9 * present[:end],
+                         relative=relative)
         top = axes[0][column]
         _panel(top, x[:end], *fortune, FORTUNE, alphas=0.15 + 0.5 * present[:end])
         if cut is not None:
@@ -75,21 +83,33 @@ def draw(books: list[dict], readings_dir: Path, out: Path) -> None:
             top.annotate("dies", (x[cut], fortune[1][-1]), xytext=(-4, 10), textcoords="offset points",
                          ha="right", color=MUTED, fontsize=8)
         top.axhline(0, color=GRID, linewidth=1, zorder=0)
-        top.set_ylim(-1.05, 1.05)
-        top.set_yticks([-1, 0, 1], ["ill fortune", "", "good fortune"])
+        if relative:
+            top.set_ylim(-RELATIVE_LIMIT, RELATIVE_LIMIT)
+            top.set_yticks([-2, 0, 2], ["worse than\nusual", "", "better than\nusual"])
+        else:
+            top.set_ylim(-1.05, 1.05)
+            top.set_yticks([-1, 0, 1], ["ill fortune", "", "good fortune"])
         top.set_title(book["title"], color=INK, fontsize=11, loc="left", pad=16)
         top.text(0, 1.02, f"expected: {book['expected_shape']}", transform=top.transAxes,
                  color=MUTED, fontsize=8, va="bottom")
 
-        tension = series(readings, "tension", len(TENSION_LEVELS), signed=False)
+        tension = series(readings, "tension", len(TENSION_LEVELS), signed=False, relative=relative)
         bottom = axes[1][column]
         _panel(bottom, x, *tension, TENSION, alphas=0.4)
-        bottom.set_ylim(-0.03, 1.03)
-        bottom.set_yticks([0, 1], ["calm", "climax"])
+        if relative:
+            bottom.axhline(0, color=GRID, linewidth=1, zorder=0)
+            bottom.set_ylim(-RELATIVE_LIMIT, RELATIVE_LIMIT)
+            bottom.set_yticks([-2, 0, 2], ["calmer than\nusual", "", "tenser than\nusual"])
+        else:
+            bottom.set_ylim(-0.03, 1.03)
+            bottom.set_yticks([0, 1], ["calm", "climax"])
 
     axes[0][0].set_ylabel("fortune of the protagonist", color=MUTED, fontsize=9)
     axes[1][0].set_ylabel("tension", color=MUTED, fontsize=9)
-    fig.tight_layout()
+    scale = "Each curve on its own book's scale: 0 is the book's average, ±1 one standard deviation. " if relative else ""
+    fig.text(0.01, 0.01, f"{scale}Band: where the curve could be, 95 % interval. Dots: single passages.",
+             color=MUTED, fontsize=8)
+    fig.tight_layout(rect=(0, 0.03, 1, 1))
     out.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out, dpi=160, facecolor=SURFACE)
 

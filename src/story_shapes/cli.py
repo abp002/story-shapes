@@ -132,6 +132,7 @@ def main(argv: list[str] | None = None) -> int:
     plot_cmd = commands.add_parser("plot", help="draw the curves of books already read")
     plot_cmd.add_argument("books", nargs="+")
     plot_cmd.add_argument("--out", type=Path, default=ROOT / "data" / "plots" / "shapes.png")
+    plot_cmd.add_argument("--relative", action="store_true", help="draw each curve on its own book's scale")
     eval_cmd = commands.add_parser("eval", help="does the model read fortune or only tone? (ALE-198)")
     eval_cmd.add_argument("action", choices=["run", "report", "tune", "deaths"])
     eval_cmd.add_argument("--fresh", action="store_true", help="discard cached answers and start over")
@@ -173,7 +174,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         from story_shapes import plot
 
-        plot.draw([books[book_id] for book_id in ids], READINGS_DIR, args.out)
+        plot.draw([books[book_id] for book_id in ids], READINGS_DIR, args.out, relative=args.relative)
         print(args.out)
     return 0
 

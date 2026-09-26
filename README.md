@@ -51,8 +51,20 @@ What that says:
   false death instead of the tomb. Rules tuned on 16 development stories (real, faked and dreamt
   deaths, `eval deaths`) did no better on the books: asked one passage at a time, "is the
   protagonist dead?" cannot tell a believed death from a real one.
-- The band shows how torn the model is on each passage; it will become the uncertainty of the
-  curve.
+- The band says how far the curve could be off: a 95 % interval that grows when passages
+  disagree, when Kev is torn between levels, and where few passages count (the ends, a cut,
+  passages without the protagonist). Neighbouring passages are not independent, so the count is
+  corrected for their correlation. Checked two ways: on synthetic readings around a known curve it
+  covers the truth 93–98 % of the time, and the renamed reading of *Romeo and Juliet* stays inside
+  it everywhere. Leaving out Kev's doubt halves the band but lets the renamed reading escape it on
+  15 % of the story, so the doubt stays in.
+- `plot --relative` draws each curve on its own book's scale (0 is the book's average, ±1 one
+  standard deviation). It answers the flat *Metamorphosis* honestly: the band then fills the whole
+  height, so Gregor's ups and downs inside the bad are below what 111 passages can resolve. The
+  absolute view says what can be said: his fortune stays clearly bad from start to end. Scrooge's
+  late rise and Romeo's fall keep their shape.
+
+  ![The same curves, each on its own book's scale](docs/relative.png)
 
 ## How it works
 

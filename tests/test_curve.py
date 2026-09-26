@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from story_shapes.curve import death_cut, mean_level, smooth, spread, to_unit
+from story_shapes.curve import confidence, death_cut, lag1_autocorrelation, mean_level, relative, smooth, spread, to_unit
 
 
 def test_mean_level_of_a_certain_answer_is_that_level():
@@ -82,3 +82,65 @@ def test_a_death_followed_by_absence_is_not_revoked():
     dead = [0.0] * 3 + [0.9, 0.8, 0.85, 0.9] + [0.05, 0.05, 0.4]
     present = [1.0] * 3 + [0.9, 0.6, 0.6, 0.5] + [0.1, 0.2, 0.3]
     assert death_cut(dead, present=present, revoke=True) == 3
+
+
+def test_the_band_is_zero_when_every_passage_agrees_and_the_model_is_sure():
+    line, half = confidence([0.4] * 30, [0.0] * 30)
+    assert np.allclose(line, 0.4)
+    assert np.allclose(half, 0.0)
+
+
+def test_the_band_widens_when_the_model_is_torn():
+    _, sure = confidence([0.0] * 30, [0.1] * 30)
+    _, torn = confidence([0.0] * 30, [0.6] * 30)
+    assert (torn > sure).all()
+
+
+def test_the_band_widens_at_the_ends_where_fewer_passages_count():
+    _, half = confidence([0.0] * 41, [0.5] * 41, sigma=4)
+    assert half[0] > half[10] and half[-1] > half[20]
+
+
+def test_a_passage_with_zero_weight_does_not_widen_the_band():
+    values, weights = [0.0] * 21, [1.0] * 21
+    values[10], weights[10] = 5.0, 0.0
+    _, half = confidence(values, [0.2] * 21, weights)
+    _, clean = confidence([0.0] * 21, [0.2] * 21, weights)
+    assert np.allclose(half, clean)
+
+
+def test_lag1_autocorrelation_sees_runs_and_ignores_alternation():
+    assert lag1_autocorrelation([1, 1, 1, 1, -1, -1, -1, -1] * 3) > 0.5
+    assert lag1_autocorrelation([1, -1] * 12) == 0.0
+
+
+@pytest.mark.parametrize("rho", [0.0, 0.5])
+def test_the_95_band_covers_the_true_curve_about_95_percent_of_the_time(rho):
+    # passages drawn around a known curve, with noise that is independent or runs in streaks
+    rng = np.random.default_rng(7)
+    n, hits, total = 120, 0, 0
+    truth = 0.4 * np.sin(np.linspace(0, 2 * np.pi, n))
+    for _ in range(200):
+        noise = np.zeros(n)
+        for i in range(n):
+            noise[i] = (rho * noise[i - 1] if i else 0) + rng.normal(0, 0.35)
+        line, half = confidence(truth + noise, np.full(n, 0.3), sigma=6)
+        inner = slice(10, n - 10)  # the smoothing itself bends the curve at the ends
+        hits += (np.abs(line - truth)[inner] <= half[inner]).sum()
+        total += n - 20
+    assert 0.9 <= hits / total <= 0.995
+
+
+def test_relative_centres_and_scales_the_line_and_moves_passages_and_band_with_it():
+    raw = [-0.9, -0.7, -0.5, -0.7]
+    line, values, half = relative(raw, [-1.0, -0.5, -0.5, -1.0], [0.1] * 4)
+    assert line.mean() == pytest.approx(0) and line.std() == pytest.approx(1)
+    assert line.argmax() == 2
+    # a passage sitting on the curve stays on it
+    assert values[2] == pytest.approx(line[2])
+    assert np.allclose(half, 0.1 / np.std(raw))
+
+
+def test_relative_leaves_a_flat_curve_flat():
+    line, _, _ = relative([0.3] * 5, [0.3] * 5, [0.0] * 5)
+    assert np.allclose(line, 0)
