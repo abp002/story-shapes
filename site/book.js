@@ -13,7 +13,8 @@ function draw(book, templates) {
   const line = on.map((r) => r[2]);
   const xs = on.map((r) => X(r[0]));
   const chapterLines = (h) => book.chapters.slice(1).map((c) => `M${X(c.x).toFixed(1)} 0V${h}`).join("");
-  const expected = book.template ? template(templates[book.template], line, 1000, FY) : "";
+  // The expected shape spans the same stretch as the curve, which stops at the hero's death.
+  const expected = book.template ? template(templates[book.template], line, xs[xs.length - 1], FY) : "";
   const death = book.died_at === null ? "" :
     `<line x1="${X(book.died_at)}" y1="0" x2="${X(book.died_at)}" y2="400" stroke="#161616" stroke-dasharray="6 4"/>
      <text x="${X(book.died_at) + 8}" y="16" font-family="IBM Plex Mono, monospace" font-size="13">† ${esc(book.protagonist)} dies</text>`;
@@ -35,9 +36,13 @@ function draw(book, templates) {
     <path d="${path(rows.map((r) => [X(r[0]), TY(r[5])]))}" fill="none" stroke="#b4500f" stroke-width="2.5" stroke-linejoin="round"/>
     <g id="tcursor"></g>`;
   $("levels").innerHTML = LEVELS.map((name, i) => `<span style="top:${(FY(-1 + i / 2) / 4).toFixed(1)}%">${name}</span>`).join("");
-  // Label every chapter when they fit, else every few.
+  // Label every chapter when they fit, else every few; never two labels on top of each other.
   const step = Math.ceil(book.chapters.length / 24);
-  $("chapters").innerHTML = book.chapters.filter((_, i) => i % step === 0)
+  const shown = [];
+  book.chapters.forEach((c, i) => {
+    if (i % step === 0 && (!shown.length || c.x - shown[shown.length - 1].x >= 0.025)) shown.push(c);
+  });
+  $("chapters").innerHTML = shown
     .map((c) => `<span title="${esc(c.name)}" style="left:${(c.x * 100 + 0.8).toFixed(1)}%">${c.n}</span>`).join("");
   $("markers").innerHTML = book.moments.map((m, k) =>
     `<span class="marker" style="left:${(rows[m.i][0] * 100).toFixed(2)}%;top:${(FY(rows[m.i][2]) / 4).toFixed(2)}%">${k + 1}</span>`).join("");
