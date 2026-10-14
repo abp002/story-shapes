@@ -7,7 +7,7 @@ TypeSafe's Jev), which returns probabilities instead of text. Public repo, writt
 ## QA
 Nivel: activo
 
-Bitácora: ALE
+Bitácora: SS
 
 ## How it works
 - `books.json` lists the books: Gutenberg id, protagonist, the words the story starts with, an optional
