@@ -65,7 +65,7 @@ What that says:
   late rise and Romeo's fall keep their shape.
 
   ![The same curves, each on its own book's scale](docs/relative.png)
-- On a corpus of 30 classics, with expected shapes and scoring fixed before reading them
+- On a corpus of 29 classics, with expected shapes and scoring fixed before reading them
   ([report](eval/CORPUS.md)), the test fails: 2 hits of 27 books, p = 0.065. The rule only counts
   a hit when the band rules out every other shape, and with a few hundred passages it almost never
   does: 3 books are resolvable, while the expected shape fits inside the band for 25.
@@ -111,7 +111,7 @@ uv run --group eval story-shapes eval report   # scores, figures and eval/RESULT
 
 `STORY_SHAPES_API` and `STORY_SHAPES_KEY` point the client at another System One endpoint. On an
 Apple M4 with 24 GB, Kev-4B takes about 3 seconds a passage: a short novel in 10–15 minutes.
-16 of the 30 classics were read there (MLX, bf16) and 14 on a Kaggle T4 (torch, fp16); `meta.json`
+15 of the 29 classics were read there (MLX, bf16) and 14 on a Kaggle T4 (torch, fp16); `meta.json`
 records which. Both read *Daisy Miller* alike: r = 0.9999, at most 0.017 apart on a 0–4 scale.
 
 ## Texts
