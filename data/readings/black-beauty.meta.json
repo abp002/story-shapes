@@ -1,0 +1,49 @@
+{
+  "story_sha256": "375dea4f515cc8247efd44298a636c455ebf7e3d439e25117619d856f1eedff6",
+  "chunking": {
+    "target_words": 200,
+    "max_words": 260,
+    "min_words": 40
+  },
+  "questions": {
+    "fortune": {
+      "type": "score",
+      "instructions": "At this point in the story, how are things going for Black Beauty?",
+      "criteria": [
+        "Disaster: they lose what matters most to them, or face ruin or death",
+        "Setback: something goes wrong for them",
+        "No real change in their situation",
+        "Gain: something goes right for them",
+        "Triumph: they get what they most wanted, or are saved"
+      ]
+    },
+    "tension": {
+      "type": "score",
+      "instructions": "How tense or suspenseful is this passage?",
+      "criteria": [
+        "Calm",
+        "Some unease",
+        "Tense",
+        "Extreme danger or climax"
+      ]
+    },
+    "present": {
+      "type": "noul",
+      "instructions": "Does Black Beauty appear or act in this passage?"
+    },
+    "dead": {
+      "type": "noul",
+      "instructions": "Is Black Beauty dead at this point in the story? Count only a real death, not a dream, a vision, a prophecy, a rumour or a death that is only faked or feared."
+    }
+  },
+  "model": {
+    "name": "kev-latest",
+    "run": "jaredpalmer/kev-4b",
+    "base": "Qwen/Qwen3.5-4B-Base",
+    "lora": 16,
+    "backend": "mlx",
+    "dtype": "bfloat16",
+    "temperature": 2.406050072164233,
+    "release_date": "2026-09-24"
+  }
+}

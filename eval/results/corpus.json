@@ -1,0 +1,588 @@
+{
+  "criterion": "C5: Kev picks the expected shape for more books than shuffled labels would (permutation p < 0.05)",
+  "books": [
+    {
+      "id": "christmas-carol",
+      "title": "A Christmas Carol",
+      "expected": "man in a hole",
+      "passages": 136,
+      "died_at": null,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": 0.4945790375499475,
+        "icarus": -0.14490032830065439,
+        "man-in-a-hole": 0.14138260376429213,
+        "oedipus": -0.3862458887639159,
+        "rags-to-riches": 0.6776337020969713,
+        "riches-to-rags": -0.6776337020969714
+      },
+      "nearest": "rags-to-riches",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "metamorphosis",
+      "title": "The Metamorphosis",
+      "expected": "from bad to worse",
+      "passages": 111,
+      "died_at": 0.92,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.5197834755722587,
+        "icarus": 0.5501741767840318,
+        "man-in-a-hole": -0.7054206974697751,
+        "oedipus": -0.47370246948789185,
+        "rags-to-riches": -0.3550756665054029,
+        "riches-to-rags": 0.3550756665054029
+      },
+      "nearest": "icarus",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "romeo-and-juliet",
+      "title": "Romeo and Juliet",
+      "expected": "icarus",
+      "passages": 124,
+      "died_at": 0.83,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.3544562601735952,
+        "icarus": 0.6878695708784028,
+        "man-in-a-hole": -0.831551502291479,
+        "oedipus": -0.378467513123951,
+        "rags-to-riches": -0.5854934025002965,
+        "riches-to-rags": 0.5854934025002966
+      },
+      "nearest": "icarus",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "hamlet",
+      "title": "Hamlet",
+      "expected": "ambiguous",
+      "passages": 152,
+      "died_at": 0.99,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.39436794363649574,
+        "icarus": -0.4274589275498233,
+        "man-in-a-hole": 0.17288511477521737,
+        "oedipus": -0.581495022345332,
+        "rags-to-riches": -0.06741218841177726,
+        "riches-to-rags": 0.06741218841177724
+      },
+      "nearest": "cinderella",
+      "resolvable": false
+    },
+    {
+      "id": "macbeth",
+      "title": "Macbeth",
+      "expected": "icarus",
+      "passages": 86,
+      "died_at": 0.99,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.47236035437305324,
+        "icarus": 0.2190219977926822,
+        "man-in-a-hole": -0.3441289071878462,
+        "oedipus": 0.31390248256094966,
+        "rags-to-riches": -0.9368400301922079,
+        "riches-to-rags": 0.9368400301922079
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "king-lear",
+      "title": "King Lear",
+      "expected": "riches to rags",
+      "passages": 131,
+      "died_at": 0.99,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.4890994461597988,
+        "icarus": 0.1384031831556512,
+        "man-in-a-hole": -0.2710547783140168,
+        "oedipus": 0.29314077791700593,
+        "rags-to-riches": -0.9161306569635378,
+        "riches-to-rags": 0.9161306569635378
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "oedipus-the-king",
+      "title": "Oedipus the King",
+      "expected": "riches to rags",
+      "passages": 58,
+      "died_at": null,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": -0.4203695467688794,
+        "icarus": 0.6251893175227422,
+        "man-in-a-hole": -0.5990243715191257,
+        "oedipus": 0.4781903202612682,
+        "rags-to-riches": -0.7470088925638151,
+        "riches-to-rags": 0.7470088925638151
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "dorian-gray",
+      "title": "The Picture of Dorian Gray",
+      "expected": "icarus",
+      "passages": 385,
+      "died_at": 1.0,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.5003231825023997,
+        "icarus": 0.08210461629171105,
+        "man-in-a-hole": -0.17030310260375578,
+        "oedipus": 0.16802220106832033,
+        "rags-to-riches": -0.8568259133912368,
+        "riches-to-rags": 0.8568259133912368
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "ethan-frome",
+      "title": "Ethan Frome",
+      "expected": "from bad to worse",
+      "passages": 146,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.09332755062098809,
+        "icarus": 0.1057143639130101,
+        "man-in-a-hole": -0.3068284473057933,
+        "oedipus": -0.21452592392870307,
+        "rags-to-riches": -0.5637224765285643,
+        "riches-to-rags": 0.5637224765285643
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "the-awakening",
+      "title": "The Awakening",
+      "expected": "icarus",
+      "passages": 233,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.6064007853063369,
+        "icarus": 0.11675856094460792,
+        "man-in-a-hole": 0.06499796343629452,
+        "oedipus": 0.5262372662777897,
+        "rags-to-riches": -0.16734402160228892,
+        "riches-to-rags": 0.16734402160228895
+      },
+      "nearest": "oedipus",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "daisy-miller",
+      "title": "Daisy Miller",
+      "expected": "riches to rags",
+      "passages": 102,
+      "died_at": 0.98,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.06477323467462297,
+        "icarus": 0.5651573252501794,
+        "man-in-a-hole": -0.6950186507056282,
+        "oedipus": -0.038278176967837835,
+        "rags-to-riches": -0.864205574946215,
+        "riches-to-rags": 0.864205574946215
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "madame-bovary",
+      "title": "Madame Bovary",
+      "expected": "riches to rags",
+      "passages": 554,
+      "died_at": 0.93,
+      "flat": 0.8333333333333334,
+      "correlations": {
+        "cinderella": -0.4246422061703312,
+        "icarus": 0.6249234603186651,
+        "man-in-a-hole": -0.5590037731994778,
+        "oedipus": 0.46565161593118715,
+        "rags-to-riches": -0.7176264862420244,
+        "riches-to-rags": 0.7176264862420245
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": true,
+      "consistent": true,
+      "hit": true
+    },
+    {
+      "id": "frankenstein",
+      "title": "Frankenstein",
+      "expected": "riches to rags",
+      "passages": 369,
+      "died_at": 0.97,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": -0.706232817822579,
+        "icarus": 0.10356253118051359,
+        "man-in-a-hole": -0.11803769075433465,
+        "oedipus": 0.5823605354176342,
+        "rags-to-riches": -0.7377056709090881,
+        "riches-to-rags": 0.7377056709090882
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "jane-eyre",
+      "title": "Jane Eyre",
+      "expected": "cinderella",
+      "passages": 894,
+      "died_at": null,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": 0.70661184917969,
+        "icarus": -0.06679834227087934,
+        "man-in-a-hole": 0.06581274607807792,
+        "oedipus": -0.6985761835271962,
+        "rags-to-riches": 0.5756150070405458,
+        "riches-to-rags": -0.5756150070405458
+      },
+      "nearest": "cinderella",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "a-little-princess",
+      "title": "A Little Princess",
+      "expected": "man in a hole",
+      "passages": 319,
+      "died_at": null,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": -0.1363600608621132,
+        "icarus": -0.8820982332646709,
+        "man-in-a-hole": 0.8674351954583994,
+        "oedipus": -0.021348214251663458,
+        "rags-to-riches": 0.44938921702068374,
+        "riches-to-rags": -0.44938921702068385
+      },
+      "nearest": "man-in-a-hole",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "secret-garden",
+      "title": "The Secret Garden",
+      "expected": "rags to riches",
+      "passages": 381,
+      "died_at": null,
+      "flat": 0.8333333333333334,
+      "correlations": {
+        "cinderella": 0.4984834954515648,
+        "icarus": 0.1756227172847375,
+        "man-in-a-hole": -0.028984205246544627,
+        "oedipus": -0.3094586110126141,
+        "rags-to-riches": 0.7481394258057071,
+        "riches-to-rags": -0.7481394258057071
+      },
+      "nearest": "rags-to-riches",
+      "resolvable": true,
+      "consistent": true,
+      "hit": true
+    },
+    {
+      "id": "anne-of-green-gables",
+      "title": "Anne of Green Gables",
+      "expected": "rags to riches",
+      "passages": 496,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.4899542895482285,
+        "icarus": -0.5216014217209508,
+        "man-in-a-hole": 0.6854942790317247,
+        "oedipus": 0.5243509706563085,
+        "rags-to-riches": 0.3811279038244777,
+        "riches-to-rags": -0.3811279038244777
+      },
+      "nearest": "man-in-a-hole",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "wizard-of-oz",
+      "title": "The Wonderful Wizard of Oz",
+      "expected": "man in a hole",
+      "passages": 187,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.34092554476786674,
+        "icarus": -0.26526104306163945,
+        "man-in-a-hole": 0.17853874319879548,
+        "oedipus": -0.180812448685425,
+        "rags-to-riches": 0.28536504959576414,
+        "riches-to-rags": -0.28536504959576414
+      },
+      "nearest": "cinderella",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "treasure-island",
+      "title": "Treasure Island",
+      "expected": "man in a hole",
+      "passages": 321,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.22390316627305135,
+        "icarus": -0.13331724558862496,
+        "man-in-a-hole": -0.01720017527385892,
+        "oedipus": -0.49712142044444546,
+        "rags-to-riches": -0.10941199528789329,
+        "riches-to-rags": 0.10941199528789326
+      },
+      "nearest": "cinderella",
+      "resolvable": false,
+      "consistent": false,
+      "hit": false
+    },
+    {
+      "id": "robinson-crusoe",
+      "title": "Robinson Crusoe",
+      "expected": "man in a hole",
+      "passages": 601,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.430304946306807,
+        "icarus": -0.18006311289218324,
+        "man-in-a-hole": 0.2903932435322323,
+        "oedipus": -0.2643676317816806,
+        "rags-to-riches": 0.8460942698866728,
+        "riches-to-rags": -0.8460942698866728
+      },
+      "nearest": "rags-to-riches",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "pride-and-prejudice",
+      "title": "Pride and Prejudice",
+      "expected": "man in a hole",
+      "passages": 588,
+      "died_at": null,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": 0.19271281427038062,
+        "icarus": -0.7187886281313313,
+        "man-in-a-hole": 0.6170507077157142,
+        "oedipus": -0.25624047042655995,
+        "rags-to-riches": 0.3746283226265413,
+        "riches-to-rags": -0.3746283226265414
+      },
+      "nearest": "man-in-a-hole",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "great-expectations",
+      "title": "Great Expectations",
+      "expected": "cinderella",
+      "passages": 896,
+      "died_at": null,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": 0.8626105553867995,
+        "icarus": 0.5535939172981394,
+        "man-in-a-hole": -0.6544636380997435,
+        "oedipus": -0.7410115998810539,
+        "rags-to-riches": 0.08098364750336341,
+        "riches-to-rags": -0.08098364750336348
+      },
+      "nearest": "cinderella",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "oliver-twist",
+      "title": "Oliver Twist",
+      "expected": "rags to riches",
+      "passages": 746,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.3377175211362397,
+        "icarus": -0.0196097580701982,
+        "man-in-a-hole": 0.28247342728100516,
+        "oedipus": 0.4460429566501306,
+        "rags-to-riches": 0.5059908066433428,
+        "riches-to-rags": -0.505990806643343
+      },
+      "nearest": "rags-to-riches",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "tess",
+      "title": "Tess of the d'Urbervilles",
+      "expected": "oedipus",
+      "passages": 717,
+      "died_at": null,
+      "flat": 0.9166666666666666,
+      "correlations": {
+        "cinderella": 0.3710796559162008,
+        "icarus": 0.797387595116607,
+        "man-in-a-hole": -0.9040829454571062,
+        "oedipus": -0.21137327272070494,
+        "rags-to-riches": -0.4960394498577059,
+        "riches-to-rags": 0.4960394498577059
+      },
+      "nearest": "icarus",
+      "resolvable": false,
+      "consistent": false,
+      "hit": false
+    },
+    {
+      "id": "great-gatsby",
+      "title": "The Great Gatsby",
+      "expected": "icarus",
+      "passages": 228,
+      "died_at": 0.89,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.29266124924286124,
+        "icarus": 0.7115838674260203,
+        "man-in-a-hole": -0.7334829094580092,
+        "oedipus": 0.2893057316088638,
+        "rags-to-riches": -0.7497969707246834,
+        "riches-to-rags": 0.7497969707246834
+      },
+      "nearest": "riches-to-rags",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "silas-marner",
+      "title": "Silas Marner",
+      "expected": "man in a hole",
+      "passages": 342,
+      "died_at": null,
+      "flat": 0.8333333333333334,
+      "correlations": {
+        "cinderella": -0.08767777435873364,
+        "icarus": -0.4730465262304598,
+        "man-in-a-hole": 0.6817704252550695,
+        "oedipus": 0.22798493348157003,
+        "rags-to-riches": 0.8575131936607672,
+        "riches-to-rags": -0.8575131936607672
+      },
+      "nearest": "rags-to-riches",
+      "resolvable": true,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "call-of-the-wild",
+      "title": "The Call of the Wild",
+      "expected": "man in a hole",
+      "passages": 165,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.4633663002240186,
+        "icarus": -0.416935304793714,
+        "man-in-a-hole": 0.4363786766510546,
+        "oedipus": -0.40773854809701965,
+        "rags-to-riches": 0.756110229724363,
+        "riches-to-rags": -0.756110229724363
+      },
+      "nearest": "rags-to-riches",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    },
+    {
+      "id": "candide",
+      "title": "Candide",
+      "expected": "ambiguous",
+      "passages": 158,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": 0.3028042551084192,
+        "icarus": 0.16982176641182703,
+        "man-in-a-hole": -0.013931246453587072,
+        "oedipus": 0.11062853322994605,
+        "rags-to-riches": 0.5961076832582596,
+        "riches-to-rags": -0.5961076832582596
+      },
+      "nearest": "rags-to-riches",
+      "resolvable": false
+    },
+    {
+      "id": "black-beauty",
+      "title": "Black Beauty",
+      "expected": "man in a hole",
+      "passages": 286,
+      "died_at": null,
+      "flat": 1.0,
+      "correlations": {
+        "cinderella": -0.13426400878585656,
+        "icarus": -0.7241109866019785,
+        "man-in-a-hole": 0.6322084666325803,
+        "oedipus": -0.056352113352011936,
+        "rags-to-riches": 0.11396684359796778,
+        "riches-to-rags": -0.11396684359796778
+      },
+      "nearest": "man-in-a-hole",
+      "resolvable": false,
+      "consistent": true,
+      "hit": false
+    }
+  ],
+  "missing": [],
+  "scored": 27,
+  "hits": 2,
+  "resolvable": 3,
+  "consistent": 25,
+  "p": 0.06529347065293471,
+  "passes": false
+}
