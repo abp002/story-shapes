@@ -48,17 +48,17 @@
 <div>
 <span class="kicker">Pre-registered test</span>
 <span class="big" id="hits"></span>
-<span class="mono" id="hits-verdict" style="font-size:15px;font-weight:500;color:var(--expected)"></span>
+<span class="mono" id="hits-verdict" style="font-size:14px;font-weight:500;color:var(--expected)"></span>
 <p>Before reading a single book we wrote down each one's expected shape and what counts as a hit: the nearest shape is the expected one, and the band is narrow enough to rule out a flat line. <span id="resolvable"></span></p>
 </div>
 <div>
 <span class="kicker">Post hoc, not pre-registered</span>
 <span class="big" id="post-hoc"></span>
-<span class="mono" id="post-hoc-p" style="font-size:15px;font-weight:500;color:#2756a6"></span>
+<span class="mono" id="post-hoc-p" style="font-size:14px;font-weight:500;color:#2756a6"></span>
 <p>Drop the second bar and count a hit whenever the nearest shape is the expected one. Kev mostly points the right way; a few hundred passages are not enough to say so with confidence. The pre-registered result is the one that stands.</p>
 </div>
 </div>
-<p class="mono muted" style="font-size:13px;margin:0">Candide and Hamlet have no agreed shape and are shown as controls. <a href="https://github.com/abp002/story-shapes/blob/main/eval/CORPUS.md">Full scoring</a></p>
+<p class="mono muted" style="font-size:14px;margin:0">Candide and Hamlet have no agreed shape and are shown as controls. <a href="https://github.com/abp002/story-shapes/blob/main/eval/CORPUS.md">Full scoring</a></p>
 </section>
 
 <section id="books">
@@ -76,11 +76,11 @@
 <section id="method">
 <h2>How a curve is made</h2>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:40px;margin-top:36px">
-<div><p class="mono" style="font-size:15px;font-weight:500;margin:0 0 10px">01 Cut</p><p class="lede" style="font-size:17px">Each book comes from Project Gutenberg and is cut into passages of about 200 words. The model never sees the title, only the protagonist's name and the passage.</p></div>
-<div><p class="mono" style="font-size:15px;font-weight:500;margin:0 0 10px">02 Ask</p><p class="lede" style="font-size:17px">Kev-4B answers on five outcomes, from "they lose what matters most" to "they get what they most wanted". Outcomes, not feelings: gloomy words around good news no longer fool it.</p></div>
-<div><p class="mono" style="font-size:15px;font-weight:500;margin:0 0 10px">03 Smooth</p><p class="lede" style="font-size:17px">The answers are smoothed into one line with a 95 % band that widens where passages disagree or the model hesitates. The line stops where the protagonist dies for good.</p></div>
+<div><p class="mono" style="font-size:14px;font-weight:500;margin:0 0 10px">01 Cut</p><p class="lede" style="font-size:18px">Each book comes from Project Gutenberg and is cut into passages of about 200 words. The model never sees the title, only the protagonist's name and the passage.</p></div>
+<div><p class="mono" style="font-size:14px;font-weight:500;margin:0 0 10px">02 Ask</p><p class="lede" style="font-size:18px">Kev-4B answers on five outcomes, from "they lose what matters most" to "they get what they most wanted". Outcomes, not feelings: gloomy words around good news no longer fool it.</p></div>
+<div><p class="mono" style="font-size:14px;font-weight:500;margin:0 0 10px">03 Smooth</p><p class="lede" style="font-size:18px">The answers are smoothed into one line with a 95 % band that widens where passages disagree or the model hesitates. The line stops where the protagonist dies for good.</p></div>
 </div>
-<p class="mono muted" style="font-size:13px;line-height:1.6;margin:32px 0 0;max-width:820px">15 books were read on a Mac (MLX, bf16) and 14 on a Kaggle T4 (torch, fp16). Daisy Miller, read on both, agrees at r = 0.9999.</p>
+<p class="mono muted" style="font-size:14px;line-height:1.6;margin:32px 0 0;max-width:820px">15 books were read on a Mac (MLX, bf16) and 14 on a Kaggle T4 (torch, fp16). Daisy Miller, read on both, agrees at r = 0.9999.</p>
 </section>
 </main>
 
