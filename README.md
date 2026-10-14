@@ -70,6 +70,11 @@ What that says:
   a hit when the band rules out every other shape, and with a few hundred passages it almost never
   does: 3 books are resolvable, while the expected shape fits inside the band for 25.
 
+  *Post hoc, not pre-registered:* dropping that rule and counting a hit whenever the nearest
+  shape is the expected one gives 14 of 27 books, against p < 0.001 for shuffled labels. Kev
+  mostly points to the right shape; a few hundred passages are not enough to say so with
+  confidence. The pre-registered result above is the one that stands.
+
 ## How it works
 
 - `books.json` lists each book: its Gutenberg id, its protagonist, and the words the story
