@@ -2,6 +2,9 @@
 
 The shape of a story, read passage by passage by a model that decides instead of writing.
 
+**[See the 29 books →](https://abp002.github.io/story-shapes/)** Each one has its own page: every
+passage on the curve, the chapters, and what Kev answered at any point of the book.
+
 Kurt Vonnegut argued that stories have shapes: plot how things go for the protagonist from the
 first page to the last, and a handful of curves keep coming back — *man in a hole*, *from bad to
 worse*, *Cinderella*. Researchers have since drawn these curves by scoring the tone of the words
@@ -108,6 +111,10 @@ uv run story-shapes eval run                   # ask the model (answers are cach
 uv run story-shapes eval tune                  # compare wordings on the development set
 uv run --group eval story-shapes eval report   # scores, figures and eval/RESULTS.md
 ```
+
+`uv run story-shapes site` builds the website into `_site/` (the pages are in `site/`). It fetches
+the texts from Gutenberg and publishes only the first words of each passage, never for an edition
+still under copyright. A push to `main` rebuilds and publishes it on GitHub Pages.
 
 `STORY_SHAPES_API` and `STORY_SHAPES_KEY` point the client at another System One endpoint. On an
 Apple M4 with 24 GB, Kev-4B takes about 3 seconds a passage: a short novel in 10–15 minutes.

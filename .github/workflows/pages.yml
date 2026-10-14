@@ -1,0 +1,50 @@
+# Build the site from the readings and publish it on GitHub Pages.
+# The repository holds no book text: the build fetches it from Gutenberg (cached between runs).
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/cache@v4
+        with:
+          path: data/raw
+          key: gutenberg-${{ hashFiles('books.json') }}
+          restore-keys: gutenberg-
+      - name: Build
+        # Gutenberg sometimes answers 504; each try keeps the texts already fetched.
+        run: |
+          for try in 1 2 3; do
+            uv run story-shapes site --out _site && exit 0
+            sleep 30
+          done
+          exit 1
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
